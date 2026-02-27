@@ -23,6 +23,10 @@ public class Room {
     @ElementCollection
     private List<String> equipment = new ArrayList<>(); // Liste équipements (projecteur, PC…)
 
+    @ManyToOne
+    @JoinColumn(name = "campus_id", nullable = false)
+    private Campus campus;
+
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
     private List<Reservation> reservations = new ArrayList<>();
 }
