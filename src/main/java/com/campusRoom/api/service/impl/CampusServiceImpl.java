@@ -16,6 +16,17 @@ import org.springframework.stereotype.Service;
 public class CampusServiceImpl implements CampusService {
 
     private final CampusRepository campusRepository;
+    private final CampusMapper campusMapper;
+
+    @Override
+    public CampusDto getCampusById(Long id){
+
+        Campus campus = campusRepository.findById(id)
+                .orElseThrow(() ->
+                        new CampusRoomBusinessException("Erreur, le campus n'existe pas.", HttpStatus.NOT_FOUND));
+
+        return campusMapper.toDTO(campus);
+    }
 
     @Override
     public CampusDto getCampusByName(String name){
@@ -24,7 +35,7 @@ public class CampusServiceImpl implements CampusService {
                 .orElseThrow(() ->
                         new CampusRoomBusinessException("Aucun campus n'existe pour ce nom." , HttpStatus.NOT_FOUND));
 
-        return CampusMapper.INSTANCE.toDTO(campus);
+        return campusMapper.toDTO(campus);
     }
 
     @Override
@@ -34,12 +45,12 @@ public class CampusServiceImpl implements CampusService {
     }
 
     @Override
-    public CampusDto createCampus(CampusFormDto campusFormDto){
+    public void createCampus(CampusFormDto campusFormDto){
 
         boolean campusExist = verifyIfCampusExist(campusFormDto.name() , campusFormDto.city());
         if(campusExist){
             throw new CampusRoomBusinessException("Un campus existe déjà sous le nom : "
-                    + campusFormDto.name() + "dans la ville : "
+                    + campusFormDto.name() + " dans la ville de : "
                     + campusFormDto.city() , HttpStatus.CONFLICT);
         }
 
@@ -49,7 +60,11 @@ public class CampusServiceImpl implements CampusService {
                 .build();
 
         campusRepository.save(campus);
+    }
 
-        return CampusMapper.INSTANCE.toDTO(campus);
+    @Override
+    public void save(Campus campus){
+
+        campusRepository.save(campus);
     }
 }

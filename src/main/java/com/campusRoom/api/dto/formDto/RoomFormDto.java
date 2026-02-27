@@ -12,6 +12,9 @@ public record RoomFormDto(
         Integer capacity,
 
         @NotBlank(message = "Emplacement Obligatoire.")
-        String location
+        String location ,
+
+        @NotNull(message = " Obligation d'avoir un campus associé pour une salle.")
+        Long campusId
 ) {
 }

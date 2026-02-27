@@ -2,8 +2,16 @@ package com.campusRoom.api.service;
 
 import com.campusRoom.api.dto.formDto.CampusFormDto;
 import com.campusRoom.api.dto.outPutDto.CampusDto;
+import com.campusRoom.api.entity.Campus;
 
 public interface CampusService {
+
+    /**
+     * rétourne un campus existant
+     * @param id id du campus
+     * @return le campus
+     */
+    CampusDto getCampusById(Long id);
 
     /**
      * rétourne un campus existant
@@ -22,7 +30,13 @@ public interface CampusService {
     /**
      * Créer un campus
      * @param campusFormDto campus à créer
-     * @return campus crée
      */
-    CampusDto createCampus(CampusFormDto campusFormDto);
+    void createCampus(CampusFormDto campusFormDto);
+
+    /**
+     * Enregistrer un campus
+     * @param campus le campus
+     */
+    void save(Campus campus);
+
 }
