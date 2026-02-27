@@ -16,8 +16,13 @@ public class Room {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;        // Nom / code de la salle
+    @Column(nullable = false, unique = true)
+    private String name; // Nom / code de la salle
+
+    @Column(nullable = false)
     private Integer capacity;   // Capacité maximale
+
+    @Column(nullable = false)
     private String location;    // Emplacement (bâtiment, étage)
 
     @ElementCollection
