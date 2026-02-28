@@ -5,7 +5,6 @@ import com.campusRoom.api.dto.outPutDto.RoomDto;
 import com.campusRoom.api.entity.Campus;
 import com.campusRoom.api.entity.Room;
 import com.campusRoom.api.exception.CampusRoomBusinessException;
-import com.campusRoom.api.mapper.CampusMapper;
 import com.campusRoom.api.mapper.RoomMapper;
 import com.campusRoom.api.repository.RoomRepository;
 import com.campusRoom.api.service.CampusService;
@@ -21,7 +20,6 @@ public class RoomServiceImpl implements RoomService {
 
     private final RoomRepository roomRepository;
     private final CampusService campusService;
-    private final CampusMapper campusMapper;
     private final RoomMapper roomMapper;
 
     @Override
