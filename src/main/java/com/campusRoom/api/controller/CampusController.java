@@ -24,7 +24,7 @@ public class CampusController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/name")
+    @GetMapping()
     ResponseEntity<CampusDto> getCampusByName(@RequestParam String name){
 
         return ResponseEntity.ok(campusService.getCampusByName(name));

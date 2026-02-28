@@ -24,7 +24,7 @@ public class RoomController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/name")
+    @GetMapping()
     ResponseEntity<RoomDto> getRoomByName(@RequestParam String name){
 
         return ResponseEntity.ok(roomService.getByRoomName(name));
