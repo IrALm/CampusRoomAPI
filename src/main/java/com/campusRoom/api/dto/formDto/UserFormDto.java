@@ -16,6 +16,6 @@ public record UserFormDto(
         String email,
 
         @NotNull(message = "Le rôle est également obligatoire.")
-        Role role
+        String role
 ) {
 }
