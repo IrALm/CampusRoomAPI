@@ -29,4 +29,12 @@ public class CampusController {
 
         return ResponseEntity.ok(campusService.getCampusByName(name));
     }
+
+    @PatchMapping("/{campusId}/update")
+    ResponseEntity<Void> updateName(@PathVariable Long campusId , @RequestParam String name, @RequestParam String city){
+
+        campusService.updateNameAndCity(campusId , name , city);
+        return ResponseEntity.noContent().build();
+    }
+
 }
