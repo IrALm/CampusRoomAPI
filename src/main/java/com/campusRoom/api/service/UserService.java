@@ -32,4 +32,18 @@ public interface UserService {
      * @param userFormDto infos utilisateur.
      */
     void createUser(UserFormDto userFormDto);
+
+    /**
+     * Met à jour le prénom utilisateur.
+     * @param id id user
+     * @param firstName prénom
+     */
+    void updateFirstName(Long id, String firstName);
+
+    /**
+     * Met à jour le nom utilisateur.
+     * @param id id user
+     * @param lastName nom.
+     */
+    void updateLastName(Long id, String lastName);
 }

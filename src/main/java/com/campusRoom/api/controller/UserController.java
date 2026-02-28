@@ -24,10 +24,24 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/email")
+    @GetMapping()
     ResponseEntity<UserDto> getUserByEmail(@RequestParam String email){
 
         return ResponseEntity.ok(userService.getUserByEmail(email));
+    }
+
+    @PatchMapping("/{userId}/firstName")
+    ResponseEntity<Void> updateFirstName(@PathVariable Long userId , @RequestParam String firstName){
+
+        userService.updateFirstName(userId , firstName);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{userId}/lastName")
+    ResponseEntity<Void> updateLastName(@PathVariable Long userId , @RequestParam String lastName){
+
+        userService.updateLastName(userId , lastName);
+        return ResponseEntity.noContent().build();
     }
 
 }

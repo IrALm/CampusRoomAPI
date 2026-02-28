@@ -8,6 +8,7 @@ import com.campusRoom.api.exception.CampusRoomBusinessException;
 import com.campusRoom.api.mapper.UserMapper;
 import com.campusRoom.api.repository.UserRepository;
 import com.campusRoom.api.service.UserService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -68,5 +69,17 @@ public class UserServiceImpl implements UserService {
                 .build();
 
         userRepository.save(user);
+    }
+
+    @Transactional
+    public void updateFirstName(Long id, String firstName){
+
+        userRepository.updateFirstName(id , firstName);
+    }
+
+    @Transactional
+    public void updateLastName(Long id, String lastName){
+
+        userRepository.updateLastName(id , lastName);
     }
 }
