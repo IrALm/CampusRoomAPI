@@ -11,7 +11,7 @@ public interface CampusService {
      * @param id id du campus
      * @return le campus
      */
-    CampusDto getCampusById(Long id);
+    Campus getCampusById(Long id);
 
     /**
      * rétourne un campus existant

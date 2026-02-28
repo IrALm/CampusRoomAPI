@@ -24,4 +24,8 @@ public interface RoomService {
      * @return la salle
      */
     RoomDto getByRoomName(String name);
+
+    void updateRoomCapacity(Long id , int capacity);
+
+    void updateRoomName( Long campusId , Long id , String name);
 }

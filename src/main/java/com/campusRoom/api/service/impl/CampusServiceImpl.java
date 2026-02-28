@@ -20,13 +20,12 @@ public class CampusServiceImpl implements CampusService {
     private final CampusMapper campusMapper;
 
     @Override
-    public CampusDto getCampusById(Long id){
+    public Campus getCampusById(Long id){
 
-        Campus campus = campusRepository.findById(id)
+         return campusRepository.findById(id)
                 .orElseThrow(() ->
                         new CampusRoomBusinessException("Erreur, le campus n'existe pas.", HttpStatus.NOT_FOUND));
 
-        return campusMapper.toDTO(campus);
     }
 
     @Override
@@ -61,7 +60,7 @@ public class CampusServiceImpl implements CampusService {
                 .city(campusFormDto.city())
                 .build();
 
-        campusRepository.save(campus);
+        save(campus);
     }
 
     @Override

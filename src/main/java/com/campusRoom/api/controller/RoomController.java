@@ -29,4 +29,18 @@ public class RoomController {
 
         return ResponseEntity.ok(roomService.getByRoomName(name));
     }
+
+    @PatchMapping("/{roomId}/capacity")
+    ResponseEntity<Void> updateRoomCapacity(@PathVariable Long roomId , @RequestParam int capacity){
+
+        roomService.updateRoomCapacity(roomId , capacity);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{roomId}/name")
+    ResponseEntity<Void> updateRoomName(@PathVariable Long roomId , @RequestParam Long campusId , @RequestParam String name){
+
+        roomService.updateRoomName(campusId , roomId , name);
+        return ResponseEntity.noContent().build();
+    }
 }
