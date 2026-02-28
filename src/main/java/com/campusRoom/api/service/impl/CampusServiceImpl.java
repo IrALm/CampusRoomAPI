@@ -7,6 +7,7 @@ import com.campusRoom.api.exception.CampusRoomBusinessException;
 import com.campusRoom.api.mapper.CampusMapper;
 import com.campusRoom.api.repository.CampusRepository;
 import com.campusRoom.api.service.CampusService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -19,13 +20,12 @@ public class CampusServiceImpl implements CampusService {
     private final CampusMapper campusMapper;
 
     @Override
-    public CampusDto getCampusById(Long id){
+    public Campus getCampusById(Long id){
 
-        Campus campus = campusRepository.findById(id)
+         return campusRepository.findById(id)
                 .orElseThrow(() ->
                         new CampusRoomBusinessException("Erreur, le campus n'existe pas.", HttpStatus.NOT_FOUND));
 
-        return campusMapper.toDTO(campus);
     }
 
     @Override
@@ -41,7 +41,7 @@ public class CampusServiceImpl implements CampusService {
     @Override
     public boolean verifyIfCampusExist(String name , String city){
 
-        return campusRepository.existsByNameAndCity(name , city);
+        return campusRepository.existsByName(name);
     }
 
     @Override
@@ -51,7 +51,8 @@ public class CampusServiceImpl implements CampusService {
         if(campusExist){
             throw new CampusRoomBusinessException("Un campus existe déjà sous le nom : "
                     + campusFormDto.name() + " dans la ville de : "
-                    + campusFormDto.city() , HttpStatus.CONFLICT);
+                    + campusFormDto.city() + " ou dans une autre ville" +
+                    ". Le nom du campus doit être unique. " , HttpStatus.CONFLICT);
         }
 
         Campus campus = Campus.builder()
@@ -59,12 +60,28 @@ public class CampusServiceImpl implements CampusService {
                 .city(campusFormDto.city())
                 .build();
 
-        campusRepository.save(campus);
+        save(campus);
     }
 
     @Override
     public void save(Campus campus){
 
         campusRepository.save(campus);
+    }
+
+
+    @Override
+    @Transactional
+    public void updateNameAndCity(Long id , String name , String city){
+
+        boolean campusExist = verifyIfCampusExist(name , city);
+        if(campusExist){
+            throw new CampusRoomBusinessException("Un campus existe déjà sous le nom : "
+                    + name + " dans la ville de : "
+                    + city + " ou dans une autre ville" +
+                    ". Le nom du campus doit être unique. " , HttpStatus.CONFLICT);
+        }
+
+        campusRepository.updateNameAndCity(id , name , city);
     }
 }

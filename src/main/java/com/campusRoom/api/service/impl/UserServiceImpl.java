@@ -71,12 +71,14 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+    @Override
     @Transactional
     public void updateFirstName(Long id, String firstName){
 
         userRepository.updateFirstName(id , firstName);
     }
 
+    @Override
     @Transactional
     public void updateLastName(Long id, String lastName){
 

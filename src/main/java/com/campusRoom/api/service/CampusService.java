@@ -11,7 +11,7 @@ public interface CampusService {
      * @param id id du campus
      * @return le campus
      */
-    CampusDto getCampusById(Long id);
+    Campus getCampusById(Long id);
 
     /**
      * rétourne un campus existant
@@ -38,5 +38,12 @@ public interface CampusService {
      * @param campus le campus
      */
     void save(Campus campus);
+
+    /**
+     * Met à jour le nom du Campus et sa ville.
+     * @param id id du campus
+     * @param name nom du campus
+     */
+    void updateNameAndCity(Long id , String name , String city);
 
 }

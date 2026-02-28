@@ -1,16 +1,15 @@
 package com.campusRoom.api.service.impl;
 
 import com.campusRoom.api.dto.formDto.RoomFormDto;
-import com.campusRoom.api.dto.outPutDto.CampusDto;
 import com.campusRoom.api.dto.outPutDto.RoomDto;
 import com.campusRoom.api.entity.Campus;
 import com.campusRoom.api.entity.Room;
 import com.campusRoom.api.exception.CampusRoomBusinessException;
-import com.campusRoom.api.mapper.CampusMapper;
 import com.campusRoom.api.mapper.RoomMapper;
 import com.campusRoom.api.repository.RoomRepository;
 import com.campusRoom.api.service.CampusService;
 import com.campusRoom.api.service.RoomService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -21,7 +20,6 @@ public class RoomServiceImpl implements RoomService {
 
     private final RoomRepository roomRepository;
     private final CampusService campusService;
-    private final CampusMapper campusMapper;
     private final RoomMapper roomMapper;
 
     @Override
@@ -44,8 +42,7 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public void createRoom(RoomFormDto roomFormDto){
 
-        CampusDto campusDto = campusService.getCampusById(roomFormDto.campusId());
-        Campus campus = campusMapper.toEntity(campusDto);
+        Campus campus = campusService.getCampusById(roomFormDto.campusId());
 
         boolean roomExist = verifyIfRoomExist(roomFormDto.name());
 
@@ -62,6 +59,39 @@ public class RoomServiceImpl implements RoomService {
                 .campus(campus)
                 .build();
         campus.getRooms().add(room);
-        campusService.save(campus);
+        roomRepository.save(room);
+    }
+
+    @Override
+    @Transactional
+    public void updateRoomCapacity(Long id , int capacity){
+
+        if( !roomRepository.existsById(id) ){
+
+            throw new CampusRoomBusinessException("Cette salle n'existe pas" , HttpStatus.NOT_FOUND);
+        }
+
+        roomRepository.updateRoomCapacity(id , capacity);
+    }
+
+    @Override
+    @Transactional
+    public void updateRoomName( Long campusId , Long id , String name){
+
+        Campus campus = campusService.getCampusById( campusId);
+
+        Room room = roomRepository.findById(id)
+                .orElseThrow(() ->
+                        new CampusRoomBusinessException("Cette salle n'existe pas" , HttpStatus.NOT_FOUND));
+
+        if(room.getCampus().getId().equals(campus.getId())
+                && verifyIfRoomExist(name)){
+
+            throw new CampusRoomBusinessException(" Une Salle avec le nom : "
+                    + name + " existe déjà sur le campus : "
+                    + campus.getName() , HttpStatus.CONFLICT);
+        }
+
+        roomRepository.updateRoomName(id , name);
     }
 }
