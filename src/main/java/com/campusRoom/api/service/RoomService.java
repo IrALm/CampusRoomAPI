@@ -47,4 +47,10 @@ public interface RoomService {
      * @param name nom de la salle.
      */
     void updateRoomName( Long campusId , Long id , String name);
+
+    /**
+     * Supprime une salle
+     * @param id id de la salle
+     */
+    void deleteById(Long id);
 }

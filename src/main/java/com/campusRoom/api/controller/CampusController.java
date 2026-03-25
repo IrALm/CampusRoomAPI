@@ -47,4 +47,10 @@ public class CampusController {
         return ResponseEntity.ok(campusResearchService.search(searchDto));
     }
 
+    @DeleteMapping("/{campusId}")
+    public ResponseEntity<Void> deleteById(@PathVariable Long campusId) {
+        campusService.deleteById(campusId);
+        return ResponseEntity.noContent().build();
+    }
+
 }

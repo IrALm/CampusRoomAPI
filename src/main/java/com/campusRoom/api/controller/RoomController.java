@@ -53,4 +53,10 @@ public class RoomController {
             @Valid @RequestBody RoomSearchDto searchDto) {
         return ResponseEntity.ok(roomSearchService.search(searchDto));
     }
+
+    @DeleteMapping("/{roomId}")
+    public ResponseEntity<Void> deleteById(@PathVariable Long roomId) {
+        roomService.deleteById(roomId);
+        return ResponseEntity.noContent().build();
+    }
 }

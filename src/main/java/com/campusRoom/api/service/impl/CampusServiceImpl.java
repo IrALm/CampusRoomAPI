@@ -7,10 +7,13 @@ import com.campusRoom.api.exception.CampusRoomBusinessException;
 import com.campusRoom.api.mapper.CampusMapper;
 import com.campusRoom.api.repository.CampusRepository;
 import com.campusRoom.api.service.CampusService;
+import com.campusRoom.api.service.ReservationChecker;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -18,6 +21,7 @@ public class CampusServiceImpl implements CampusService {
 
     private final CampusRepository campusRepository;
     private final CampusMapper campusMapper;
+    private final ReservationChecker reservationChecker;
 
     @Override
     public Campus getCampusById(Long id){
@@ -83,5 +87,29 @@ public class CampusServiceImpl implements CampusService {
         }
 
         campusRepository.updateNameAndCity(id , name , city);
+    }
+
+    @Transactional
+    @Override
+    public void deleteById(Long id) {
+        Campus campus = campusRepository.findById(id)
+                .orElseThrow(() -> new CampusRoomBusinessException(
+                        "Aucun campus trouvé pour l'id : " + id,
+                        HttpStatus.NOT_FOUND
+                ));
+
+        // Vérifie les réservations futures sur toutes les rooms du campus
+        boolean hasFutureReservations = reservationChecker
+                .existsByRoomCampusIdAndStartTimeAfter(id, LocalDateTime.now());
+
+        if (hasFutureReservations) {
+            throw new CampusRoomBusinessException(
+                    "Impossible de supprimer le campus \"" + campus.getName()
+                            + "\" : des réservations futures sont rattachées à ses salles.",
+                    HttpStatus.CONFLICT
+            );
+        }
+
+        campusRepository.delete(campus);
     }
 }

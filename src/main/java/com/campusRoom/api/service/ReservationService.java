@@ -17,4 +17,10 @@ public interface ReservationService {
      * @return reservationDto
      */
     ReservationDto getReservationWithAllProperties(Long reservationId);
+
+    /**
+     * Supprime une réservation
+     * @param id id de la réservation
+     */
+    void deleteById(Long id);
 }

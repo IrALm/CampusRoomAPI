@@ -8,11 +8,14 @@ import com.campusRoom.api.exception.CampusRoomBusinessException;
 import com.campusRoom.api.mapper.RoomMapper;
 import com.campusRoom.api.repository.RoomRepository;
 import com.campusRoom.api.service.CampusService;
+import com.campusRoom.api.service.ReservationChecker;
 import com.campusRoom.api.service.RoomService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +24,7 @@ public class RoomServiceImpl implements RoomService {
     private final RoomRepository roomRepository;
     private final CampusService campusService;
     private final RoomMapper roomMapper;
+    private final ReservationChecker reservationChecker;
 
     @Override
     public boolean verifyIfRoomExist(String name){
@@ -101,5 +105,29 @@ public class RoomServiceImpl implements RoomService {
         }
 
         roomRepository.updateRoomName(id , name);
+    }
+
+    @Transactional
+    @Override
+    public void deleteById(Long roomId) {
+
+        Room room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new CampusRoomBusinessException(
+                        "Aucune salle trouvée pour l'id : " + roomId,
+                        HttpStatus.NOT_FOUND
+                ));
+
+        boolean hasFutureReservations = reservationChecker
+                .existsByRoomIdAndStartTimeAfter(roomId, LocalDateTime.now());
+
+        if (hasFutureReservations) {
+            throw new CampusRoomBusinessException(
+                    "Impossible de supprimer la salle \"" + room.getName()
+                            + "\" : des réservations futures sont rattachées.",
+                    HttpStatus.CONFLICT
+            );
+        }
+
+        roomRepository.delete(room);
     }
 }

@@ -17,6 +17,7 @@ import com.campusRoom.api.service.patternStrategy.ValidationStrategy;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -77,5 +78,17 @@ public class ReservationServiceImpl implements ReservationService {
         }
 
         return reservationMapper.toDTO(reservation);
+    }
+
+    @Transactional
+    @Override
+    public void deleteById(Long id) {
+        if (!reservationRepository.existsById(id)) {
+            throw new CampusRoomBusinessException(
+                    "Aucune réservation trouvée pour l'id : " + id,
+                    HttpStatus.NOT_FOUND
+            );
+        }
+        reservationRepository.deleteById(id);
     }
 }

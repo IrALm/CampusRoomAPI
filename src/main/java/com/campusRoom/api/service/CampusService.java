@@ -46,4 +46,10 @@ public interface CampusService {
      */
     void updateNameAndCity(Long id , String name , String city);
 
+    /**
+     * Supprime un campus
+     * @param id id du campus
+     */
+    void deleteById(Long id);
+
 }

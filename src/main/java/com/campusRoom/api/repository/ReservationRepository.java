@@ -58,4 +58,10 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
         WHERE r.id = :reservationId
     """)
     Reservation findReservationWithAllProperties(@Param("reservationId") Long reservationId);
+
+    // Existe-t-il des réservations futures pour une room donnée ?
+    boolean existsByRoomIdAndStartTimeAfter(Long roomId, LocalDateTime date);
+
+    // Existe-t-il des réservations futures pour un campus donné ?
+    boolean existsByRoomCampusIdAndStartTimeAfter(Long campusId, LocalDateTime date);
 }

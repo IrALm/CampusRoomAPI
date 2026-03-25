@@ -38,4 +38,10 @@ public class ReservationController {
             @RequestBody ReservationSearchDto searchDto) {
         return ResponseEntity.ok(reservationResearchService.search(searchDto));
     }
+
+    @DeleteMapping("/{reservationId}")
+    public ResponseEntity<Void> deleteById(@PathVariable Long reservationId) {
+        reservationService.deleteById(reservationId);
+        return ResponseEntity.noContent().build();
+    }
 }
