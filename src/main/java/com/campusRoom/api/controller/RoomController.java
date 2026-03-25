@@ -2,7 +2,10 @@ package com.campusRoom.api.controller;
 
 import com.campusRoom.api.dto.formDto.RoomFormDto;
 import com.campusRoom.api.dto.outPutDto.RoomDto;
+import com.campusRoom.api.dto.researchDto.RoomPageDto;
+import com.campusRoom.api.dto.researchDto.RoomSearchDto;
 import com.campusRoom.api.service.RoomService;
+import com.campusRoom.api.service.research.RoomSearchService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 public class RoomController {
 
     private final RoomService roomService;
+    private final RoomSearchService roomSearchService;
 
     @PostMapping()
     ResponseEntity<Void> createRoom(@RequestBody @Valid RoomFormDto roomFormDto){
@@ -42,5 +46,11 @@ public class RoomController {
 
         roomService.updateRoomName(campusId , roomId , name);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/search")
+    public ResponseEntity<RoomPageDto> search(
+            @Valid @RequestBody RoomSearchDto searchDto) {
+        return ResponseEntity.ok(roomSearchService.search(searchDto));
     }
 }

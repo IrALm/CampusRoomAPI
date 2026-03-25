@@ -94,4 +94,16 @@ public class UserServiceImpl implements UserService {
 
         userRepository.updateLastName(id , lastName);
     }
+
+    @Transactional
+    @Override
+    public void deleteById(Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new CampusRoomBusinessException(
+                    "Aucun utilisateur trouvé pour l'id : " + id,
+                    HttpStatus.NOT_FOUND
+            );
+        }
+        userRepository.deleteById(id);
+    }
 }

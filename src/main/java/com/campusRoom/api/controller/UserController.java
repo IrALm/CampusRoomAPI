@@ -2,7 +2,10 @@ package com.campusRoom.api.controller;
 
 import com.campusRoom.api.dto.formDto.UserFormDto;
 import com.campusRoom.api.dto.outPutDto.UserDto;
+import com.campusRoom.api.dto.researchDto.UserPageDto;
+import com.campusRoom.api.dto.researchDto.UserSearchDto;
 import com.campusRoom.api.service.UserService;
+import com.campusRoom.api.service.research.UserResearchService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    private final UserResearchService userResearchService;
 
     @PostMapping()
     ResponseEntity<Void> createUser(@RequestBody @Valid UserFormDto userFormDto){
@@ -41,6 +45,18 @@ public class UserController {
     ResponseEntity<Void> updateLastName(@PathVariable Long userId , @RequestParam String lastName){
 
         userService.updateLastName(userId , lastName);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/search")
+    public ResponseEntity<UserPageDto> search(
+            @RequestBody UserSearchDto searchDto) {
+        return ResponseEntity.ok(userResearchService.search(searchDto));
+    }
+
+    @DeleteMapping("/{UserId}")
+    public ResponseEntity<Void> deleteById(@PathVariable Long UserId) {
+        userService.deleteById(UserId);
         return ResponseEntity.noContent().build();
     }
 

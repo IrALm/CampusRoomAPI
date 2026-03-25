@@ -54,4 +54,10 @@ public interface UserService {
      * @param lastName nom.
      */
     void updateLastName(Long id, String lastName);
+
+    /**
+     * Supprime un utilisateur
+     * @param userId id de l'utilisateur.
+     */
+    void deleteById(Long userId);
 }

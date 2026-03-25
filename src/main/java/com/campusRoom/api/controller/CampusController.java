@@ -2,7 +2,10 @@ package com.campusRoom.api.controller;
 
 import com.campusRoom.api.dto.formDto.CampusFormDto;
 import com.campusRoom.api.dto.outPutDto.CampusDto;
+import com.campusRoom.api.dto.researchDto.CampusPageDto;
+import com.campusRoom.api.dto.researchDto.CampusSearchDto;
 import com.campusRoom.api.service.CampusService;
+import com.campusRoom.api.service.research.CampusResearchService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 public class CampusController {
 
     private final CampusService campusService;
+    private final CampusResearchService campusResearchService;
 
     @PostMapping()
     ResponseEntity<Void> createCampus(@RequestBody @Valid CampusFormDto campusFormDto){
@@ -35,6 +39,12 @@ public class CampusController {
 
         campusService.updateNameAndCity(campusId , name , city);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/search")
+    public ResponseEntity<CampusPageDto> search(
+            @RequestBody CampusSearchDto searchDto) {
+        return ResponseEntity.ok(campusResearchService.search(searchDto));
     }
 
 }
