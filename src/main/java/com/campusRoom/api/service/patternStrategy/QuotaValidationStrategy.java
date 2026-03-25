@@ -26,7 +26,7 @@ public class QuotaValidationStrategy implements ValidationStrategy {
         if (user.getRole() == Role.STUDENT) {
             long count = reservationRepository.countByUserAndMonth(
                     user.getId(),
-                    reservation.getStartTime().getMonth(),
+                    reservation.getStartTime().getMonthValue(),
                     reservation.getStartTime().getYear()
             );
             if (count >= STUDENT_MONTHLY_LIMIT) {

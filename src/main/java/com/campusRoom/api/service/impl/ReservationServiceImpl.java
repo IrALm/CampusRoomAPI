@@ -1,10 +1,12 @@
 package com.campusRoom.api.service.impl;
 
 import com.campusRoom.api.dto.formDto.ReservationFormDto;
+import com.campusRoom.api.dto.outPutDto.ReservationDto;
 import com.campusRoom.api.entity.Reservation;
 import com.campusRoom.api.entity.Room;
 import com.campusRoom.api.entity.User;
 import com.campusRoom.api.exception.CampusRoomBusinessException;
+import com.campusRoom.api.mapper.ReservationMapper;
 import com.campusRoom.api.repository.ReservationRepository;
 import com.campusRoom.api.service.ReservationService;
 import com.campusRoom.api.service.RoomService;
@@ -25,19 +27,19 @@ public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository reservationRepository;
     private final ReservationFactory reservationFactory;
-    // Spring injecte automatiquement toutes les ValidationStrategy détectées
-    private final List<ValidationStrategy> validationStrategies;
+    private final List<ValidationStrategy> validationStrategies;// Spring injecte automatiquement toutes les ValidationStrategy détectées
     private final UserService userService;
     private final RoomService roomService;
+    private final ReservationMapper reservationMapper;
 
     @Override
-    public Reservation create(ReservationFormDto dto, Long currentUserId) {
+    public void create(ReservationFormDto dto) {
 
         // 1. Factory : obtenir le comportement selon le type
         ReservationBehavior behavior = reservationFactory.create(dto.type());
 
         // 2. Construire l'entité
-        User currentUser = userService.getUserById(currentUserId);
+        User currentUser = userService.getUserById(dto.userId());
         Room room = roomService.getRoomById(dto.roomId());
         Reservation reservation = new Reservation();
         reservation.setStartTime(dto.startTime());
@@ -62,6 +64,18 @@ public class ReservationServiceImpl implements ReservationService {
             strategy.validate(reservation, currentUser);
         }
 
-        return reservationRepository.save(reservation);
+        reservationRepository.save(reservation);
+    }
+
+    @Override
+    public ReservationDto getReservationWithAllProperties(Long reservationId){
+
+        Reservation reservation = reservationRepository.findReservationWithAllProperties(reservationId);
+        if( reservation == null){
+            throw  new CampusRoomBusinessException("Aucune reservation n'existe pour cet id" ,
+                    HttpStatus.NOT_FOUND);
+        }
+
+        return reservationMapper.toDTO(reservation);
     }
 }
