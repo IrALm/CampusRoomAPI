@@ -47,7 +47,15 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     """)
     long countByUserAndMonth(
             @Param("userId") Long userId,
-            @Param("month") Month month,
+            @Param("month") int month,
             @Param("year")   int year
     );
+
+    @Query("""
+        SELECT r FROM Reservation r
+        INNER JOIN FETCH r.user
+        INNER JOIN FETCH r.room
+        WHERE r.id = :reservationId
+    """)
+    Reservation findReservationWithAllProperties(@Param("reservationId") Long reservationId);
 }
