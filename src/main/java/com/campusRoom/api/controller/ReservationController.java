@@ -3,12 +3,14 @@ package com.campusRoom.api.controller;
 import com.campusRoom.api.dto.formDto.ReservationFormDto;
 import com.campusRoom.api.dto.outPutDto.ReservationDto;
 import com.campusRoom.api.service.ReservationService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@Tag(name ="Reservations" , description = "Endpoints pour gérer les réservations")
 @RequestMapping("/reservations")
 @RequiredArgsConstructor
 public class ReservationController {
