@@ -22,6 +22,9 @@ public class Reservation {
     @Enumerated(EnumType.STRING)
     private ReservationType type;    // COURSE / MEETING / EXAM
 
+    private String description;
+    private int maxDurationHours;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

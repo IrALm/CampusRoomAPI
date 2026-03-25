@@ -38,6 +38,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getUserById(Long userId){
+
+        return userRepository.findById(userId)
+                .orElseThrow(
+                        () -> new CampusRoomBusinessException("Aucun utilisateur pour cet id ",
+                                HttpStatus.NOT_FOUND)
+                );
+    }
+
+    @Override
     public boolean verifyIfRoleIsValid( String role){
 
         return Role.isValid(role);

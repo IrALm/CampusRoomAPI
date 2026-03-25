@@ -2,6 +2,7 @@ package com.campusRoom.api.service;
 
 import com.campusRoom.api.dto.formDto.RoomFormDto;
 import com.campusRoom.api.dto.outPutDto.RoomDto;
+import com.campusRoom.api.entity.Room;
 
 public interface RoomService {
 
@@ -24,6 +25,13 @@ public interface RoomService {
      * @return la salle
      */
     RoomDto getByRoomName(String name);
+
+    /**
+     * Récupère une salle
+     * @param roomId id de la salle.
+     * @return la salle
+     */
+    Room getRoomById(Long roomId);
 
     /**
      * Met à jour la capacité.

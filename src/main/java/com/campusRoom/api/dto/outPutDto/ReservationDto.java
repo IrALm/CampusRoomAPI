@@ -1,16 +1,19 @@
 package com.campusRoom.api.dto.outPutDto;
 
 import com.campusRoom.api.entity.ReservationType;
-
+import lombok.Builder;
 import java.time.LocalDateTime;
 
+@Builder
 public record ReservationDto(
 
-        Long id,
-        LocalDateTime startTime,
-        LocalDateTime endTime,
-        ReservationType type,
-        UserDto userDto,
-        RoomDto roomDto
-) {
-}
+    Long id,
+    ReservationType type,
+    LocalDateTime startTime,
+    LocalDateTime endTime,
+    RoomDto roomDto,
+    UserDto userDto,
+    String description,
+    int maxDurationHours
+
+){}

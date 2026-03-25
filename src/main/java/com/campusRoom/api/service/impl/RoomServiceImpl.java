@@ -39,6 +39,14 @@ public class RoomServiceImpl implements RoomService {
         return roomMapper.toDTO(room);
     }
 
+    public Room getRoomById(Long roomId){
+
+        return roomRepository.findById(roomId).orElseThrow(
+                () -> new CampusRoomBusinessException("Aucune salle n'existe pour cet id ",
+                        HttpStatus.NOT_FOUND)
+        );
+    }
+
     @Override
     public void createRoom(RoomFormDto roomFormDto){
 

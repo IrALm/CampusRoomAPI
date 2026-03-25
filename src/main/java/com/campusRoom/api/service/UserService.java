@@ -3,6 +3,7 @@ package com.campusRoom.api.service;
 import com.campusRoom.api.dto.formDto.UserFormDto;
 import com.campusRoom.api.dto.outPutDto.UserDto;
 import com.campusRoom.api.entity.Role;
+import com.campusRoom.api.entity.User;
 
 public interface UserService {
 
@@ -19,6 +20,13 @@ public interface UserService {
      * @return user
      */
     UserDto getUserByEmail(String email);
+
+    /**
+     * Récupère User grâce à son id.
+     * @param userId id User
+     * @return USer
+     */
+    User getUserById(Long userId);
 
     /**
      * Vérifie si le rôle utilisateur est correcte
