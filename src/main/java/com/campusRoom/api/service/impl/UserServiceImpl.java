@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
         boolean validRole = verifyIfRoleIsValid(userFormDto.role());
 
         if(!validRole){
-            throw new CampusRoomBusinessException(" Le rôle de l'utilisateur : "
+            throw new CampusRoomBusinessException(" Le rôle de l'utilisateur "
                     + userFormDto.firstName() + " est invalide." ,
                     HttpStatus.BAD_REQUEST);
         }
