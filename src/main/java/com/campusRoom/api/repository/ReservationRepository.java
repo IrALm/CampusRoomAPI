@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.time.Month;
 
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
@@ -46,7 +47,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     """)
     long countByUserAndMonth(
             @Param("userId") Long userId,
-            @Param("month")  int month,
+            @Param("month") Month month,
             @Param("year")   int year
     );
 }

@@ -10,4 +10,7 @@ public class constantReservation {
 
     public static final int MAX_DURATION_OF_EXAM_IN_HOUR = 4;
     public static final String DESCRIPTION_EXAM_RESERVATION = "Réservation d'examen";
+
+    public static final int STUDENT_MONTHLY_LIMIT = 5;
+
 }
