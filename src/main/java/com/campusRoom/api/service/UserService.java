@@ -2,7 +2,6 @@ package com.campusRoom.api.service;
 
 import com.campusRoom.api.dto.formDto.UserFormDto;
 import com.campusRoom.api.dto.outPutDto.UserDto;
-import com.campusRoom.api.entity.Role;
 import com.campusRoom.api.entity.User;
 
 public interface UserService {

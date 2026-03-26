@@ -94,15 +94,31 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.10</version>
+
+                <configuration>
+                    <excludes>
+                        <!-- Exclure toutes les interfaces du package service -->
+                        <exclude>com/campusRoom/api/service/*.class</exclude>
+                        <!-- Exclure toutes les entités pour ne pas tester des méthodes triviales comme getter/Setter -->
+                        <exclude>com/campusRoom/api/entity/*.class</exclude>
+                        <!-- Exclure tous les dto de form et read, car ce n'est pas pertinent de faire du test des records simples -->
+                        <exclude>com/campusRoom/api/dto/formDto/*.class</exclude>
+                        <exclude>com/campusRoom/api/dto/outPutDto/*.class</exclude>
+                        <!-- Exclure le test généré par défaut de spring initlz -->
+                        <exclude>com/campusRoom/api/*.class</exclude>
+                    </excludes>
+                </configuration>
+
                 <executions>
                     <execution>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
                     </execution>
+
                     <execution>
                         <id>report</id>
-                        <phase>test</phase>
+                        <phase>verify</phase>
                         <goals>
                             <goal>report</goal>
                         </goals>

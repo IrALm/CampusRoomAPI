@@ -3,8 +3,8 @@ package com.campusRoom.api.service.patternFactory;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static com.campusRoom.api.service.constantReservation.DESCRIPTION_COURSE_RESERVATION;
-import static com.campusRoom.api.service.constantReservation.MAX_DURATION_OF_COURSE_IN_HOUR;
+import static com.campusRoom.api.service.ConstantReservation.DESCRIPTION_COURSE_RESERVATION;
+import static com.campusRoom.api.service.ConstantReservation.MAX_DURATION_OF_COURSE_IN_HOUR;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("Tests unitaires pour CourseReservation")

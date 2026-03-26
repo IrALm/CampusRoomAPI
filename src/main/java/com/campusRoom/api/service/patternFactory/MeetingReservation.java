@@ -1,7 +1,7 @@
 package com.campusRoom.api.service.patternFactory;
 
-import static com.campusRoom.api.service.constantReservation.DESCRIPTION_MEETING_RESERVATION;
-import static com.campusRoom.api.service.constantReservation.MAX_DURATION_OF_MEETING_IN_HOUR;
+import static com.campusRoom.api.service.ConstantReservation.DESCRIPTION_MEETING_RESERVATION;
+import static com.campusRoom.api.service.ConstantReservation.MAX_DURATION_OF_MEETING_IN_HOUR;
 
 public class MeetingReservation implements ReservationBehavior {
 

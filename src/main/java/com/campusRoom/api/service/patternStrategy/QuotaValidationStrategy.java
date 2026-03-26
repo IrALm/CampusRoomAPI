@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
-import static com.campusRoom.api.service.constantReservation.STUDENT_MONTHLY_LIMIT;
+import static com.campusRoom.api.service.ConstantReservation.STUDENT_MONTHLY_LIMIT;
 
 /**
  * Stratégie 3 : quota mensuel

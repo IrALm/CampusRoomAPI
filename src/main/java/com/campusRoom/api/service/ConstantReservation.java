@@ -1,6 +1,6 @@
 package com.campusRoom.api.service;
 
-public class constantReservation {
+public class ConstantReservation {
 
     public static final int MAX_DURATION_OF_COURSE_IN_HOUR = 3;
     public static final String DESCRIPTION_COURSE_RESERVATION = "Réservation de cours";

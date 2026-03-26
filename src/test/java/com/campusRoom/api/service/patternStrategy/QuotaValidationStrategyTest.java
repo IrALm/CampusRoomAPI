@@ -15,7 +15,7 @@ import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
 
-import static com.campusRoom.api.service.constantReservation.STUDENT_MONTHLY_LIMIT;
+import static com.campusRoom.api.service.ConstantReservation.STUDENT_MONTHLY_LIMIT;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
