@@ -8,9 +8,6 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface CampusMapper {
 
-    @Mapping(source ="roomDtoList" , target = "rooms")
-    Campus toEntity(CampusDto campusDto);
-
     @Mapping(source="rooms" , target = "roomDtoList")
     CampusDto toDTO(Campus campus);
 }

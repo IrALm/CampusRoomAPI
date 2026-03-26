@@ -48,36 +48,6 @@ class CampusMapperTest {
         assertEquals("Salle A", dto.roomDtoList().get(0).name());
     }
 
-    @Test
-    @DisplayName("toEntity doit mapper correctement CampusDto vers Campus")
-    void shouldMapDtoToCampus() {
-        // GIVEN
-        RoomDto roomDto = RoomDto.builder()
-                .id(1L)
-                .name("Salle B")
-                .capacity(30)
-                .build();
-
-        CampusDto dto = CampusDto.builder()
-                .id(20L)
-                .name("Campus Paris")
-                .city("Paris")
-                .roomDtoList(List.of(roomDto))
-                .build();
-
-        // WHEN
-        Campus campus = mapper.toEntity(dto);
-
-        // THEN
-        assertNotNull(campus);
-        assertEquals(20L, campus.getId());
-        assertEquals("Campus Paris", campus.getName());
-        assertEquals("Paris", campus.getCity());
-
-        assertNotNull(campus.getRooms());
-        assertEquals(1, campus.getRooms().size());
-        assertEquals("Salle B", campus.getRooms().get(0).getName());
-    }
 
     @Test
     @DisplayName("toDTO doit gérer les listes null")
@@ -95,19 +65,4 @@ class CampusMapperTest {
         assertNull(dto.roomDtoList());
     }
 
-    @Test
-    @DisplayName("toEntity doit gérer les listes null")
-    void shouldHandleNullRoomDtoList() {
-        CampusDto dto = CampusDto.builder()
-                .id(1L)
-                .name("Campus Vide")
-                .city("Lyon")
-                .roomDtoList(null)
-                .build();
-
-        Campus campus = mapper.toEntity(dto);
-
-        assertNotNull(campus);
-        assertNull(campus.getRooms());
-    }
 }
