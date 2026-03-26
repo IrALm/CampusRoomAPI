@@ -67,4 +67,4 @@ graph TD
     Service --> Data
 ```
 
-Une documentation technique très détaillée sur l'architecture et les Design Patterns implémentés se trouve dans le document `architecture.html`.
+Une documentation technique très détaillée sur l'architecture et les Design Patterns implémentés se trouve sur ce site https://iralm.github.io/CampusRoomAPI/
