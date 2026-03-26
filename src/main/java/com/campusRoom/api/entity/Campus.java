@@ -6,10 +6,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
+@Table(name = "campus")
 public class Campus {
 
     @Id
