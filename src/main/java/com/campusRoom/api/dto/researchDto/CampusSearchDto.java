@@ -1,8 +1,10 @@
 package com.campusRoom.api.dto.researchDto;
 
 import com.campusRoom.api.service.research.sort.CampusSortEnum;
+import lombok.Builder;
 import org.springframework.data.domain.Sort;
 
+@Builder
 public record CampusSearchDto(
 
         // ─── Filtres ────────────────────────────────────────────────────────

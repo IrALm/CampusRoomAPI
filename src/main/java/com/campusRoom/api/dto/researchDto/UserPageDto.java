@@ -1,10 +1,12 @@
 package com.campusRoom.api.dto.researchDto;
 
 import com.campusRoom.api.dto.outPutDto.UserDto;
+import lombok.Builder;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
 
+@Builder
 public record UserPageDto(
         List<UserDto> contenu,
         int           pageActuelle,

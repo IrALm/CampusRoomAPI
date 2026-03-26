@@ -1,10 +1,13 @@
 package com.campusRoom.api.dto.researchDto;
 
 import com.campusRoom.api.entity.ReservationType;
+import com.campusRoom.api.service.research.sort.ReservationSortEnum;
+import lombok.Builder;
 import org.springframework.data.domain.Sort;
 
 import java.time.LocalDateTime;
 
+@Builder
 public record ReservationSearchDto(
 
         // ─── Filtres ────────────────────────────────────────────────────────
@@ -21,6 +24,6 @@ public record ReservationSearchDto(
         Sort.Direction sortDirection
 ) {
     public Pagination toPagination() {
-        return Pagination.of(page, size, sortBy, sortDirection);
+        return Pagination.of(page, size, ReservationSortEnum.resolveField(sortBy), sortDirection);
     }
 }

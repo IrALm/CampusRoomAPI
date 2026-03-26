@@ -19,7 +19,7 @@ public record Pagination(
         return Pagination.builder()
                 .page(page != null ? page : 0)
                 .size(size != null ? size : 10)
-                .sortBy(ReservationSortEnum.resolveField(sortBy))
+                .sortBy((sortBy != null && !sortBy.isBlank()) ? sortBy : "id") // champ par défaut
                 .direction(direction != null ? direction : Sort.Direction.ASC)
                 .build();
     }

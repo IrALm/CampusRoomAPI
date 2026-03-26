@@ -2,8 +2,9 @@ package com.campusRoom.api.dto.researchDto;
 
 import com.campusRoom.api.service.research.sort.RoomSortEnum;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Builder;
 import org.springframework.data.domain.Sort;
-
+@Builder
 public record RoomSearchDto(
 
         // ─── Filtres ────────────────────────────────────────────────────────

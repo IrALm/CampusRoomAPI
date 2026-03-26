@@ -1,10 +1,12 @@
 package com.campusRoom.api.dto.researchDto;
 
 import com.campusRoom.api.dto.outPutDto.ReservationDto;
+import lombok.Builder;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
 
+@Builder
 public record ReservationPageDto(
         List<ReservationDto> contenu,
         int                  pageActuelle,

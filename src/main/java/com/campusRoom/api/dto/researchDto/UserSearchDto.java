@@ -2,8 +2,9 @@ package com.campusRoom.api.dto.researchDto;
 
 import com.campusRoom.api.entity.Role;
 import com.campusRoom.api.service.research.sort.UserSortEnum;
+import lombok.Builder;
 import org.springframework.data.domain.Sort;
-
+@Builder
 public record UserSearchDto(
 
         // ─── Filtres ────────────────────────────────────────────────────────

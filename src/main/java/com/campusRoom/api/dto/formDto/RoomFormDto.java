@@ -2,7 +2,9 @@ package com.campusRoom.api.dto.formDto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 
+@Builder
 public record RoomFormDto(
 
         @NotBlank(message = "Le nom est obligatoire.")

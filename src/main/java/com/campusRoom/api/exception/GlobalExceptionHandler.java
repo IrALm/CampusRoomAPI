@@ -80,33 +80,6 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * Gère les erreurs quand le corps de la requête HTTP est invalide.
-     * Si une valeur d'enum est incorrecte, affiche les valeurs possibles.
-     *
-     * @param ex l'exception levée lors de la lecture du corps de la requête
-     * @param request la requête HTTP qui a causé l'erreur
-     * @return une réponse HTTP 400 avec le message d'erreur
-     */
-    @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<ApiErrorResponse> handleNotReadable(
-            HttpMessageNotReadableException ex,
-            HttpServletRequest request
-    ) {
-        String message = "Requête invalide";
-
-        Throwable cause = ex.getMostSpecificCause();
-        if (cause instanceof InvalidFormatException invalidFormat
-                && invalidFormat.getTargetType().isEnum()) {
-            message = "Valeur invalide : '" + invalidFormat.getValue()
-                    + "'. Valeurs acceptées : "
-                    + Arrays.toString(invalidFormat.getTargetType().getEnumConstants());
-        }
-
-        return buildResponse(HttpStatus.BAD_REQUEST, message, request);
-    }
-
-
-    /**
      * Construit une réponse d'erreur standardisée pour l'API.
      *
      * @param status  le statut HTTP à renvoyer

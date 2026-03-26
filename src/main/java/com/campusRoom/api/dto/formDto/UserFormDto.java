@@ -1,9 +1,10 @@
 package com.campusRoom.api.dto.formDto;
 
-import com.campusRoom.api.entity.Role;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 
+@Builder
 public record UserFormDto(
 
         @NotBlank(message = "Le prénom est obligatoire.")
