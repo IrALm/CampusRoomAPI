@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "Room", description = "Endpoints pour gérer les salles universitaires : création, consultation, modification, recherche et suppression.")
+@Tag(name = "Room", description = "Endpoints pour gérer les salles universitaires.")
 @RequestMapping("/room")
 public class RoomController {
 
@@ -28,101 +28,32 @@ public class RoomController {
     private final RoomSearchService roomSearchService;
 
     // =========================================
-    // CRÉER UNE SALLE
+    // CREATE
     // =========================================
-    @Operation(
-            summary = "Créer une nouvelle salle",
-            description = """
-                    Enregistre une nouvelle salle rattachée à un campus existant.
-
-                    **Champs obligatoires :** `name`, `capacity`, `location`, `campusId`
-
-                    **Champs optionnels :** `equipment` (chaîne libre décrivant les équipements disponibles : projecteur, PC, tableau blanc…)
-                    """
-    )
+    @Operation(summary = "Créer une salle")
     @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "204",
-                    description = "Salle créée avec succès — aucun contenu retourné"
-            ),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Requête invalide : champs manquants ou incorrects",
-                    content = @Content(
-                            mediaType = "application/json",
-                            examples = @ExampleObject(value = """
-                                    {
-                                        "status": 400,
-                                        "message": "Données invalides",
-                                        "erreurs": {
-                                            "name":       "Le nom de la salle est obligatoire",
-                                            "capacity":   "La capacité est obligatoire",
-                                            "location":   "L'emplacement est obligatoire",
-                                            "campusId": "L'Id du campus est obligatoire"
-                                        },
-                                        "timestamp": "2026-03-16T10:00:00"
-                                    }
-                                    """)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "Campus introuvable pour le nom fourni",
-                    content = @Content(
-                            mediaType = "application/json",
-                            examples = @ExampleObject(value = """
-                                    {
-                                        "status":  404,
-                                        "message": "Aucun campus trouvé pour cet Id: Campus Inconnu"
-                                    }
-                                    """)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "409",
-                    description = "Conflit : une salle portant ce nom existe déjà sur ce campus",
-                    content = @Content(
-                            mediaType = "application/json",
-                            examples = @ExampleObject(value = """
-                                    {
-                                        "status":  409,
-                                        "message": "Une salle avec ce nom existe déjà"
-                                    }
-                                    """)
-                    )
-            )
+            @ApiResponse(responseCode = "204", description = "Salle créée"),
+            @ApiResponse(responseCode = "400", description = "Erreur validation"),
+            @ApiResponse(responseCode = "404", description = "Campus introuvable"),
+            @ApiResponse(responseCode = "409", description = "Déjà existante")
     })
     @io.swagger.v3.oas.annotations.parameters.RequestBody(
-            description = "Informations de la salle à créer",
+            description = "Salle à créer",
             required = true,
             content = @Content(
                     mediaType = "application/json",
-                    examples = {
-                            @ExampleObject(
-                                    name = "Salle équipée",
-                                    value = """
-                                            {
-                                                "name":       "Salle A101",
-                                                "capacity":   30,
-                                                "location":   "Bâtiment A — 1er étage",
-                                                "campusId": 1,
-                                                "equipment":  "Projecteur, PC, Tableau blanc"
-                                            }
-                                            """
-                            ),
-                            @ExampleObject(
-                                    name = "Salle simple sans équipement",
-                                    value = """
-                                            {
-                                                "name":       "Salle B202",
-                                                "capacity":   20,
-                                                "location":   "Bâtiment B — 2ème étage",
-                                                "campusId": 1,
-                                                "equipment":  ""
-                                            }
-                                            """
-                            )
-                    }
+                    examples = @ExampleObject(
+                            name = "Salle A101 (Postman)",
+                            value = """
+                                    {
+                                        "name": "Salle A101",
+                                        "capacity": 30,
+                                        "location": "Bâtiment A - 1er étage",
+                                        "campusId": 1,
+                                        "equipment" :["projecteur" , "écran"]
+                                    }
+                                    """
+                    )
             )
     )
     @PostMapping
@@ -132,20 +63,9 @@ public class RoomController {
     }
 
     // =========================================
-    // OBTENIR UNE SALLE PAR NOM
+    // GET BY NAME
     // =========================================
-    @Operation(
-            summary = "Obtenir une salle par son nom exact",
-            description = """
-                    Retourne les informations d'une salle à partir de son nom **exact**.
-                    La recherche est sensible à la casse.
-
-                    Pour une recherche partielle (ex : `"sall"` pour retrouver `"Salle A101"`),
-                    utilisez l'endpoint `POST /room/search`.
-
-                    **Exemple :** `GET /room?name=Salle A101`
-                    """
-    )
+    @Operation(summary = "Obtenir une salle par nom exact")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -154,326 +74,176 @@ public class RoomController {
                             mediaType = "application/json",
                             examples = @ExampleObject(value = """
                                     {
-                                        "id":         1,
-                                        "name":       "Salle A101",
-                                        "capacity":   30,
-                                        "location":   "Bâtiment A — 1er étage",
+                                        "id": 1,
+                                        "name": "Salle A101",
+                                        "capacity": 30,
+                                        "location": "Bâtiment A - 1er étage",
                                         "campusId": 1,
-                                        "equipment":  "Projecteur, PC, Tableau blanc"
+                                        "equipment" :["projecteur" , "écran"]
                                     }
                                     """)
                     )
             ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "Aucune salle trouvée pour ce nom exact",
-                    content = @Content(
-                            mediaType = "application/json",
-                            examples = @ExampleObject(value = """
-                                    {
-                                        "status":  404,
-                                        "message": "Aucune salle trouvée pour le nom : Salle A101"
-                                    }
-                                    """)
-                    )
-            )
+            @ApiResponse(responseCode = "404", description = "Non trouvée")
     })
     @GetMapping
     ResponseEntity<RoomDto> getRoomByName(
-            @Parameter(
-                    description = "Nom exact de la salle à rechercher (sensible à la casse)",
-                    required = true,
-                    example = "Salle A101"
-            )
+            @Parameter(example = "Salle A101")
             @RequestParam String name) {
         return ResponseEntity.ok(roomService.getByRoomName(name));
     }
 
     // =========================================
-    // METTRE À JOUR LA CAPACITÉ
+    // UPDATE CAPACITY
     // =========================================
     @Operation(
-            summary = "Mettre à jour la capacité d'une salle",
-            description = """
-                    Modifie le nombre maximum de personnes pouvant occuper la salle.
-
-                    **Exemple :** `PATCH /room/1/capacity?capacity=40`
-                    """
+            summary = "Mettre à jour la capacité",
+            description = "PATCH /room/1/capacity?capacity=45"
     )
     @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "204",
-                    description = "Capacité mise à jour avec succès — aucun contenu retourné"
-            ),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Capacité invalide (valeur négative ou nulle)",
-                    content = @Content(
-                            mediaType = "application/json",
-                            examples = @ExampleObject(value = """
-                                    {
-                                        "status":  400,
-                                        "message": "La capacité doit être un entier positif"
-                                    }
-                                    """)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "Salle introuvable pour l'identifiant fourni",
-                    content = @Content(
-                            mediaType = "application/json",
-                            examples = @ExampleObject(value = """
-                                    {
-                                        "status":  404,
-                                        "message": "Aucune salle trouvée pour l'id : 99"
-                                    }
-                                    """)
-                    )
-            )
+            @ApiResponse(responseCode = "204", description = "Mis à jour"),
+            @ApiResponse(responseCode = "400", description = "Capacité invalide"),
+            @ApiResponse(responseCode = "404", description = "Salle introuvable")
     })
     @PatchMapping("/{roomId}/capacity")
     ResponseEntity<Void> updateRoomCapacity(
-            @Parameter(description = "Identifiant de la salle", required = true, example = "1")
+            @Parameter(example = "1")
             @PathVariable Long roomId,
 
-            @Parameter(description = "Nouvelle capacité maximale de la salle", required = true, example = "40")
+            @Parameter(example = "45")
             @RequestParam int capacity) {
+
         roomService.updateRoomCapacity(roomId, capacity);
         return ResponseEntity.noContent().build();
     }
 
     // =========================================
-    // METTRE À JOUR LE NOM
+    // UPDATE NAME
     // =========================================
     @Operation(
-            summary = "Mettre à jour le nom d'une salle",
-            description = """
-                    Renomme une salle existante. Le nouveau nom est vérifié en unicité
-                    sur l'ensemble du campus spécifié.
-
-                    **Exemple :** `PATCH /room/1/name?campusId=2&name=Salle A102`
-                    """
+            summary = "Mettre à jour le nom",
+            description = "PATCH /room/1/name?campusId=1&name=Salle A101"
     )
     @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "204",
-                    description = "Nom mis à jour avec succès — aucun contenu retourné"
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "Salle ou campus introuvable",
-                    content = @Content(
-                            mediaType = "application/json",
-                            examples = @ExampleObject(value = """
-                                    {
-                                        "status":  404,
-                                        "message": "Aucune salle trouvée pour l'id : 99"
-                                    }
-                                    """)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "409",
-                    description = "Conflit : le nouveau nom est déjà utilisé sur ce campus",
-                    content = @Content(
-                            mediaType = "application/json",
-                            examples = @ExampleObject(value = """
-                                    {
-                                        "status":  409,
-                                        "message": "Une salle avec ce nom existe déjà sur ce campus"
-                                    }
-                                    """)
-                    )
-            )
+            @ApiResponse(responseCode = "204", description = "Mis à jour"),
+            @ApiResponse(responseCode = "404", description = "Salle ou campus introuvable"),
+            @ApiResponse(responseCode = "409", description = "Nom déjà utilisé")
     })
     @PatchMapping("/{roomId}/name")
     ResponseEntity<Void> updateRoomName(
-            @Parameter(description = "Identifiant de la salle à renommer", required = true, example = "1")
+            @Parameter(example = "1")
             @PathVariable Long roomId,
 
-            @Parameter(description = "Identifiant du campus auquel appartient la salle", required = true, example = "2")
+            @Parameter(example = "1")
             @RequestParam Long campusId,
 
-            @Parameter(description = "Nouveau nom de la salle", required = true, example = "Salle A102")
+            @Parameter(example = "Salle A101")
             @RequestParam String name) {
+
         roomService.updateRoomName(campusId, roomId, name);
         return ResponseEntity.noContent().build();
     }
 
     // =========================================
-    // RECHERCHE PAGINÉE
+    // SEARCH
     // =========================================
     @Operation(
             summary = "Rechercher des salles avec filtres et pagination",
             description = """
-                    Recherche des salles selon des critères combinables avec pagination.
+                    Recherche des salles selon des critères combinables.
 
-                    **`campusName` est le seul champ obligatoire** — tous les autres sont optionnels.
+                    ─── FILTRES DISPONIBLES ─────────────────────────────
 
-                    ---
+                    • campusName : obligatoire (recherche partielle)
+                      → Exemple : "central"
 
-                    **Filtres textuels — recherche partielle (LIKE, insensible à la casse)**
+                    • name : recherche partielle (LIKE)
+                      → "salle" → "Salle A101"
 
-                    Les champs `name`, `location` et `equipment` supportent la **recherche partielle** :
-                    il n'est pas nécessaire de saisir le nom complet.
+                    • location : recherche partielle
+                      → "bâtiment A"
 
-                    | Champ       | Saisie      | Correspond à                        |
-                    |-------------|-------------|-------------------------------------|
-                    | `name`      | `"sall"`    | `"Salle A101"`, `"Salle B202"`, … |
-                    | `name`      | `"salle a"` | `"Salle A101"`, `"Salle A102"`, … |
-                    | `location`  | `"bât a"`   | `"Bâtiment A — 1er étage"`         |
-                    | `location`  | `"1er"`     | toutes les salles au 1er étage      |
-                    | `equipment` | `"proj"`    | `"Projecteur, PC, Tableau blanc"`   |
-                    | `equipment` | `"pc"`      | toutes les salles avec PC           |
+                    • equipment : recherche partielle
+                      → "projecteur"
 
-                    ---
+                    • capacityMin : capacité minimale (>=)
+                    • capacityMax : capacité maximale (<=)
 
-                    **Filtre capacité — plage min/max**
+                    Les filtres peuvent être combinés :
+                    → campusName + capacityMin + equipment
 
-                    `capacityMin` et `capacityMax` sont indépendants et combinables :
-                    - `capacityMin: 20` → salles de 20 personnes et plus
-                    - `capacityMax: 50` → salles de 50 personnes et moins
-                    - Les deux combinés → plage exacte [20 … 50]
+                    ─── PAGINATION ──────────────────────────────────────
+                    • page : numéro de page (0 par défaut)
+                    • size : nombre d’éléments
 
-                    ---
+                    ─── TRI ─────────────────────────────────────────────
+                    • sortBy : id, name, capacity, location
+                    • sortDirection : ASC ou DESC
 
-                    **Tri disponible :** `id`, `name`, `capacity`, `location`, `campus`
-
-                    **Direction :** `ASC` ou `DESC`
+                    ─── EXEMPLE COMPLET (Postman) ───────────────────────
+                    {
+                      "campusName": "central",
+                      "name": null,
+                      "location": "bâtiment A",
+                      "capacityMin": 20,
+                      "capacityMax": 50,
+                      "equipment": "projecteur",
+                      "page": 0,
+                      "size": 10,
+                      "sortBy": "capacity",
+                      "sortDirection": "ASC"
+                    }
                     """
     )
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Liste paginée des salles correspondant aux critères",
+                    description = "Résultat paginé",
                     content = @Content(
                             mediaType = "application/json",
                             examples = @ExampleObject(value = """
                                     {
                                         "contenu": [
                                             {
-                                                "id":         1,
-                                                "name":       "Salle A101",
-                                                "capacity":   30,
-                                                "location":   "Bâtiment A — 1er étage",
-                                                "campus": "Campus Central",
-                                                "equipment":  "Projecteu"
-                                            },
-                                            {
-                                                "id":         2,
-                                                "name":       "Salle A102",
-                                                "capacity":   25,
-                                                "location":   "Bâtiment A — 1er étage",
-                                                "campus": "Campus Central",
-                                                "equipment":  "Tableau blanc"
+                                                "id": 1,
+                                                "name": "Salle A101",
+                                                "capacity": 30,
+                                                "location": "Bâtiment A - 1er étage",
+                                                "campus": "Campus Central"
                                             }
                                         ],
-                                        "pageActuelle":   0,
-                                        "totalPages":     2,
-                                        "totalElements": 11,
-                                        "premierePage":   true,
-                                        "dernierePage":   false
-                                    }
-                                    """)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "campusName manquant ou paramètres de pagination invalides",
-                    content = @Content(
-                            mediaType = "application/json",
-                            examples = @ExampleObject(value = """
-                                    {
-                                        "status": 400,
-                                        "message": "Données invalides",
-                                        "erreurs": {
-                                            "campusName": "Le nom du campus est obligatoire"
-                                        }
+                                        "pageActuelle": 0,
+                                        "totalPages": 1,
+                                        "totalElements": 1,
+                                        "premierePage": true,
+                                        "dernierePage": true
                                     }
                                     """)
                     )
             )
     })
     @io.swagger.v3.oas.annotations.parameters.RequestBody(
-            description = """
-                    Critères de recherche et paramètres de pagination.
-                    `campusName` est obligatoire. Tous les autres champs sont optionnels.
-                    Les champs textuels (`name`, `location`, `equipment`) acceptent des valeurs partielles.
-                    """,
+            description = "Recherche salles",
             required = true,
             content = @Content(
                     mediaType = "application/json",
-                    examples = {
-                            @ExampleObject(
-                                    name = "Recherche partielle par nom — 'sall' trouve 'Salle A101'",
-                                    value = """
-                                            {
-                                                "campusName":    "Campus Central",
-                                                "name":          "sall",
-                                                "location":      null,
-                                                "capacityMin":   null,
-                                                "capacityMax":   null,
-                                                "equipment":     null,
-                                                "page":          0,
-                                                "size":          10,
-                                                "sortBy":        "name",
-                                                "sortDirection": "ASC"
-                                            }
-                                            """
-                            ),
-                            @ExampleObject(
-                                    name = "Recherche par équipement partiel — 'proj' trouve 'Projecteur, PC'",
-                                    value = """
-                                            {
-                                                "campusName":    "Campus Central",
-                                                "name":          null,
-                                                "location":      null,
-                                                "capacityMin":   null,
-                                                "capacityMax":   null,
-                                                "equipment":     "proj",
-                                                "page":          0,
-                                                "size":          10,
-                                                "sortBy":        "capacity",
-                                                "sortDirection": "DESC"
-                                            }
-                                            """
-                            ),
-                            @ExampleObject(
-                                    name = "Plage de capacité entre 20 et 50 personnes",
-                                    value = """
-                                            {
-                                                "campusName":    "Campus Sud",
-                                                "name":          null,
-                                                "location":      "bât",
-                                                "capacityMin":   20,
-                                                "capacityMax":   50,
-                                                "equipment":     null,
-                                                "page":          0,
-                                                "size":          10,
-                                                "sortBy":        "capacity",
-                                                "sortDirection": "ASC"
-                                            }
-                                            """
-                            ),
-                            @ExampleObject(
-                                    name = "Tous les filtres combinés",
-                                    value = """
-                                            {
-                                                "campusName":    "Campus Central",
-                                                "name":          "salle a",
-                                                "location":      "bâtiment a",
-                                                "capacityMin":   20,
-                                                "capacityMax":   40,
-                                                "equipment":     "pc",
-                                                "page":          0,
-                                                "size":          5,
-                                                "sortBy":        "name",
-                                                "sortDirection": "ASC"
-                                            }
-                                            """
-                            )
-                    }
+                    examples = @ExampleObject(
+                            name = "Recherche Postman",
+                            value = """
+                                    {
+                                      "campusName": "central",
+                                      "name": null,
+                                      "location": "bâtiment A",
+                                      "capacityMin": 20,
+                                      "capacityMax": 50,
+                                      "equipment": "projecteur",
+                                      "page": 0,
+                                      "size": 10,
+                                      "sortBy": "capacity",
+                                      "sortDirection": "ASC"
+                                    }
+                                    """
+                    )
             )
     )
     @PostMapping("/search")
@@ -483,56 +253,22 @@ public class RoomController {
     }
 
     // =========================================
-    // SUPPRIMER UNE SALLE
+    // DELETE
     // =========================================
     @Operation(
             summary = "Supprimer une salle",
-            description = """
-                    Supprime définitivement une salle et toutes ses réservations passées (cascade).
-
-                    **Règle métier :** la suppression est bloquée si des réservations futures
-                    existent sur cette salle. Il faut d'abord supprimer ou annuler
-                    ces réservations avant de pouvoir supprimer la salle.
-
-                    **Exemple :** `DELETE /room/1`
-                    """
+            description = "DELETE /room/1"
     )
     @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "204",
-                    description = "Salle supprimée avec succès — aucun contenu retourné"
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "Salle introuvable pour l'identifiant fourni",
-                    content = @Content(
-                            mediaType = "application/json",
-                            examples = @ExampleObject(value = """
-                                    {
-                                        "status":  404,
-                                        "message": "Aucune salle trouvée pour l'id : 99"
-                                    }
-                                    """)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "409",
-                    description = "Suppression bloquée : des réservations futures sont rattachées à cette salle",
-                    content = @Content(
-                            mediaType = "application/json",
-                            examples = @ExampleObject(value = """
-                                    {
-                                        "status":  409,
-                                        "message": "Impossible de supprimer la salle \\"Salle A101\\" : des réservations futures sont rattachées."
-                                    }
-                                    """)
-                    )
-            )
+            @ApiResponse(responseCode = "204", description = "Supprimée"),
+            @ApiResponse(responseCode = "404", description = "Non trouvée"),
+            @ApiResponse(responseCode = "409", description = "Réservations futures existantes")
     })
     @DeleteMapping("/{roomId}")
     public ResponseEntity<Void> deleteById(
-            @Parameter(description = "Identifiant de la salle à supprimer", required = true, example = "1")
+            @Parameter(example = "1")
             @PathVariable Long roomId) {
+
         roomService.deleteById(roomId);
         return ResponseEntity.noContent().build();
     }

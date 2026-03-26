@@ -36,149 +36,43 @@ public class ReservationController {
                     Crée une réservation de salle universitaire pour un utilisateur donné.
 
                     **Règles métier appliquées automatiquement :**
-                    - `ConflictStrategy` — vérifie qu'aucune réservation n'existe déjà sur ce créneau
-                    - `PriorityStrategy` — bloque un étudiant si un enseignant a réservé ce créneau
-                    - `QuotaStrategy`    — bloque un étudiant ayant atteint son quota mensuel
+                    - ConflictStrategy — vérifie qu'aucune réservation n'existe déjà sur ce créneau
+                    - PriorityStrategy — bloque un étudiant si un enseignant a réservé ce créneau
+                    - QuotaStrategy    — bloque un étudiant ayant atteint son quota mensuel
 
-                    **Types disponibles :** `COURSE`, `MEETING`, `EXAM`
+                    **Types disponibles :** COURSE, MEETING, EXAM
 
-                    **Durées maximales par type :**
-                    | Type    | Durée max |
-                    |---------|-----------|
-                    | COURSE  | 3h        |
-                    | MEETING | 2h        |
-                    | EXAM    | 4h        |
+                    **Durées maximales :**
+                    COURSE → 3h
+                    MEETING → 2h
+                    EXAM → 4h
 
-                    **Champs obligatoires :** `type`, `startTime`, `endTime`, `roomId`, `userId`
+                    **Champs obligatoires :** type, startTime, endTime, roomId, userId
                     """
     )
     @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "204",
-                    description = "Réservation créée avec succès — aucun contenu retourné"
-            ),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Requête invalide : champs manquants, date passée ou durée dépassée",
-                    content = @Content(
-                            mediaType = "application/json",
-                            examples = @ExampleObject(value = """
-                                    {
-                                        "status": 400,
-                                        "message": "Données invalides",
-                                        "erreurs": {
-                                            "type":      "Le type est obligatoire",
-                                            "startTime": "La date de début doit être dans le futur",
-                                            "roomId":    "L'id de la salle est obligatoire",
-                                            "userId":    "L'id de l'utilisateur est obligatoire"
-                                        },
-                                        "timestamp": "2026-03-16T10:00:00"
-                                    }
-                                    """)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "Salle ou utilisateur introuvable",
-                    content = @Content(
-                            mediaType = "application/json",
-                            examples = @ExampleObject(value = """
-                                    {
-                                        "status":  404,
-                                        "message": "Salle introuvable : 99"
-                                    }
-                                    """)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "409",
-                    description = "Conflit métier : créneau déjà réservé, durée dépassée ou priorité refusée",
-                    content = @Content(
-                            mediaType = "application/json",
-                            examples = {
-                                    @ExampleObject(
-                                            name = "Conflit horaire",
-                                            value = """
-                                                    {
-                                                        "status":  409,
-                                                        "message": "Ce créneau est déjà réservé pour cette salle."
-                                                    }
-                                                    """
-                                    ),
-                                    @ExampleObject(
-                                            name = "Durée dépassée",
-                                            value = """
-                                                    {
-                                                        "status":  409,
-                                                        "message": "Durée max pour ce type : 3h"
-                                                    }
-                                                    """
-                                    ),
-                                    @ExampleObject(
-                                            name = "Priorité enseignant",
-                                            value = """
-                                                    {
-                                                        "status":  403,
-                                                        "message": "Ce créneau est réservé à un enseignant. Les étudiants ont une priorité inférieure."
-                                                    }
-                                                    """
-                                    ),
-                                    @ExampleObject(
-                                            name = "Quota mensuel dépassé",
-                                            value = """
-                                                    {
-                                                        "status":  409,
-                                                        "message": "Quota mensuel atteint (5 réservations max)."
-                                                    }
-                                                    """
-                                    )
-                            }
-                    )
-            )
+            @ApiResponse(responseCode = "204", description = "Réservation créée"),
+            @ApiResponse(responseCode = "400", description = "Erreur validation"),
+            @ApiResponse(responseCode = "404", description = "Salle ou utilisateur introuvable"),
+            @ApiResponse(responseCode = "409", description = "Conflit métier")
     })
     @io.swagger.v3.oas.annotations.parameters.RequestBody(
-            description = "Informations complètes de la réservation à créer",
+            description = "Réservation à créer",
             required = true,
             content = @Content(
                     mediaType = "application/json",
-                    examples = {
-                            @ExampleObject(
-                                    name = "Réservation de cours (enseignant)",
-                                    value = """
-                                            {
-                                                "type":      "COURSE",
-                                                "startTime": "2026-06-01T10:00:00",
-                                                "endTime":   "2026-06-01T12:00:00",
-                                                "roomId":    1,
-                                                "userId":    3
-                                            }
-                                            """
-                            ),
-                            @ExampleObject(
-                                    name = "Réservation d'examen (durée max 4h)",
-                                    value = """
-                                            {
-                                                "type":      "EXAM",
-                                                "startTime": "2026-06-10T08:00:00",
-                                                "endTime":   "2026-06-10T12:00:00",
-                                                "roomId":    2,
-                                                "userId":    5
-                                            }
-                                            """
-                            ),
-                            @ExampleObject(
-                                    name = "Réunion courte (durée max 2h)",
-                                    value = """
-                                            {
-                                                "type":      "MEETING",
-                                                "startTime": "2026-05-20T14:00:00",
-                                                "endTime":   "2026-05-20T15:30:00",
-                                                "roomId":    3,
-                                                "userId":    7
-                                            }
-                                            """
-                            )
-                    }
+                    examples = @ExampleObject(
+                            name = "MEETING simple (Postman)",
+                            value = """
+                                    {
+                                        "type": "MEETING",
+                                        "startTime": "2026-03-30T10:00:00",
+                                        "endTime": "2026-03-30T11:00:00",
+                                        "roomId": 1,
+                                        "userId": 1
+                                    }
+                                    """
+                    )
             )
     )
     @PostMapping
@@ -188,16 +82,11 @@ public class ReservationController {
     }
 
     // =========================================
-    // OBTENIR UNE RÉSERVATION PAR ID
+    // GET BY ID
     // =========================================
     @Operation(
-            summary = "Obtenir une réservation avec toutes ses propriétés",
-            description = """
-                    Retourne le détail complet d'une réservation : informations de la salle,
-                    du campus, de l'utilisateur, type, horaires et description métier.
-
-                    **Exemple :** `GET /reservations/1`
-                    """
+            summary = "Obtenir une réservation",
+            description = "GET /reservations/1"
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -207,43 +96,33 @@ public class ReservationController {
                             mediaType = "application/json",
                             examples = @ExampleObject(value = """
                                     {
-                                        "id":          1,
-                                        "type":        "COURSE",
-                                        "startTime":   "2026-06-01T10:00:00",
-                                        "endTime":     "2026-06-01T12:00:00",
-                                        "description": "Réservation de cours",
-                                        "roomName":    "Salle A101",
-                                        "campusName":  "Campus Central",
-                                        "userName":    "Jean Dupont",
-                                        "userRole":    "TEACHER"
+                                        "id": 1,
+                                        "type": "MEETING",
+                                        "startTime": "2026-03-30T10:00:00",
+                                        "endTime": "2026-03-30T11:00:00",
+                                        "description": "Réunion",
+                                        "roomName": "Salle A101",
+                                        "campusName": "ESGI - Campus Paris",
+                                        "userName": "John Doe",
+                                        "userRole": "STUDENT"
                                     }
                                     """)
                     )
             ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "Aucune réservation trouvée pour cet identifiant",
-                    content = @Content(
-                            mediaType = "application/json",
-                            examples = @ExampleObject(value = """
-                                    {
-                                        "status":  404,
-                                        "message": "Aucune reservation n'existe pour cet id"
-                                    }
-                                    """)
-                    )
-            )
+            @ApiResponse(responseCode = "404", description = "Non trouvé")
     })
     @GetMapping("/{reservationId}")
     public ResponseEntity<ReservationDto> getReservationWithAllProperties(
-            @Parameter(description = "Identifiant de la réservation", required = true, example = "1")
+            @Parameter(example = "1")
             @PathVariable Long reservationId) {
-        ReservationDto dto = reservationService.getReservationWithAllProperties(reservationId);
-        return ResponseEntity.ok(dto);
+
+        return ResponseEntity.ok(
+                reservationService.getReservationWithAllProperties(reservationId)
+        );
     }
 
     // =========================================
-    // RECHERCHE PAGINÉE
+    // SEARCH
     // =========================================
     @Operation(
             summary = "Rechercher des réservations avec filtres et pagination",
@@ -251,100 +130,97 @@ public class ReservationController {
                     Recherche des réservations selon des critères combinables.
                     Tous les champs sont optionnels — sans filtre, retourne toutes les réservations paginées.
 
-                    **Filtres disponibles :**
-                    | Champ         | Type              | Comportement          |
-                    |---------------|-------------------|-----------------------|
-                    | `type`        | enum              | Égalité exacte        |
-                    | `roomId`      | Long              | Égalité exacte        |
-                    | `userId`      | Long              | Égalité exacte        |
-                    | `startTime`   | ISO date-time     | Supérieur ou égal     |
-                    | `endTime`     | ISO date-time     | Inférieur ou égal     |
+                    ─── FILTRES DISPONIBLES ─────────────────────────────
+                    • type : égalité exacte
+                      → Exemple : "MEETING"
 
-                    **Tri disponible :** `id`, `type`, `startTime`, `endTime`, `description`, `maxDurationHours`
+                    • roomId : égalité exacte
+                      → Exemple : 1
 
-                    **Direction :** `ASC` ou `DESC`
+                    • userId : égalité exacte
+                      → Exemple : 1
+
+                    • startTime : date minimale (>=)
+                      → Exemple : "2026-03-01T00:00:00"
+
+                    • endTime : date maximale (<=)
+                      → Exemple : "2026-03-31T23:59:59"
+
+                    Les filtres peuvent être combinés :
+                    → userId = 1 ET roomId = 1
+                    → période de temps (startTime + endTime)
+
+                    ─── PAGINATION ──────────────────────────────────────
+                    • page : numéro de page (commence à 0)
+                    • size : nombre d’éléments
+
+                    ─── TRI ─────────────────────────────────────────────
+                    • sortBy : id, type, startTime, endTime
+                    • sortDirection : ASC ou DESC
+
+                    ─── EXEMPLE COMPLET ─────────────────────────────────
+                    {
+                      "type": null,
+                      "roomId": null,
+                      "userId": null,
+                      "startTime": null,
+                      "endTime": null,
+                      "page": 0,
+                      "size": 10,
+                      "sortBy": "startTime",
+                      "sortDirection": "ASC"
+                    }
                     """
     )
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Liste paginée des réservations correspondant aux critères",
+                    description = "Résultat paginé",
                     content = @Content(
                             mediaType = "application/json",
                             examples = @ExampleObject(value = """
                                     {
                                         "contenu": [
                                             {
-                                                "id":          1,
-                                                "type":        "COURSE",
-                                                "startTime":   "2026-06-01T10:00:00",
-                                                "endTime":     "2026-06-01T12:00:00",
-                                                "description": "Réservation de cours",
-                                                "roomName":    "Salle A101",
-                                                "userName":    "Jean Dupont"
+                                                "id": 1,
+                                                "type": "MEETING",
+                                                "startTime": "2026-03-30T10:00:00",
+                                                "endTime": "2026-03-30T11:00:00",
+                                                "roomName": "Salle A101",
+                                                "userName": "John Doe"
                                             }
                                         ],
-                                        "pageActuelle":   0,
-                                        "totalPages":     5,
-                                        "totalElements": 48,
-                                        "premierePage":   true,
-                                        "dernierePage":   false
+                                        "pageActuelle": 0,
+                                        "totalPages": 1,
+                                        "totalElements": 1,
+                                        "premierePage": true,
+                                        "dernierePage": true
                                     }
                                     """)
                     )
             )
     })
     @io.swagger.v3.oas.annotations.parameters.RequestBody(
-            description = "Critères de recherche et paramètres de pagination — tous les champs sont optionnels",
+            description = "Recherche réservations",
             required = true,
             content = @Content(
                     mediaType = "application/json",
-                    examples = {
-                            @ExampleObject(
-                                    name = "Filtrer par type EXAM",
-                                    value = """
-                                            {
-                                                "type":          "EXAM",
-                                                "roomId":        null,
-                                                "userId":        null,
-                                                "startTime":     null,
-                                                "endTime":       null,
-                                                "page":          0,
-                                                "size":         10,
-                                                "sortBy":        "startTime",
-                                                "sortDirection": "ASC"
-                                            }
-                                            """
-                            ),
-                            @ExampleObject(
-                                    name = "Réservations d'une salle sur une plage de dates",
-                                    value = """
-                                            {
-                                                "type":          null,
-                                                "roomId":        3,
-                                                "userId":        null,
-                                                "startTime":     "2026-06-01T00:00:00",
-                                                "endTime":       "2026-06-30T23:59:59",
-                                                "page":          0,
-                                                "size":         10,
-                                                "sortBy":        "startTime",
-                                                "sortDirection": "ASC"
-                                            }
-                                            """
-                            ),
-                            @ExampleObject(
-                                    name = "Toutes les réservations d'un utilisateur",
-                                    value = """
-                                            {
-                                                "userId":        5,
-                                                "page":          0,
-                                                "size":         20,
-                                                "sortBy":        "startTime",
-                                                "sortDirection": "DESC"
-                                            }
-                                            """
-                            )
-                    }
+                    examples = @ExampleObject(
+                            name = "Recherche vide (Postman)",
+                            value = """
+                                    {
+                                        "type": null,
+                                        "roomId": null,
+                                        "userId": null,
+                                        "startTime": null,
+                                        "endTime": null,
+                                        "page": 0,
+                                        "size": 10,
+                                        "sortBy": "startTime",
+                                        "sortDirection": "ASC"
+                                    }
+                                    """
+                    )
             )
     )
     @PostMapping("/search")
@@ -354,41 +230,21 @@ public class ReservationController {
     }
 
     // =========================================
-    // SUPPRIMER UNE RÉSERVATION
+    // DELETE
     // =========================================
     @Operation(
             summary = "Supprimer une réservation",
-            description = """
-                    Supprime définitivement une réservation existante.
-                    Contrairement aux campus et aux salles, la suppression d'une réservation
-                    n'est jamais bloquée — il n'y a pas d'entité enfant liée.
-
-                    **Exemple :** `DELETE /reservations/1`
-                    """
+            description = "DELETE /reservations/1"
     )
     @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "204",
-                    description = "Réservation supprimée avec succès — aucun contenu retourné"
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "Aucune réservation trouvée pour cet identifiant",
-                    content = @Content(
-                            mediaType = "application/json",
-                            examples = @ExampleObject(value = """
-                                    {
-                                        "status":  404,
-                                        "message": "Aucune réservation trouvée pour l'id : 99"
-                                    }
-                                    """)
-                    )
-            )
+            @ApiResponse(responseCode = "204", description = "Supprimée"),
+            @ApiResponse(responseCode = "404", description = "Non trouvée")
     })
     @DeleteMapping("/{reservationId}")
     public ResponseEntity<Void> deleteById(
-            @Parameter(description = "Identifiant de la réservation à supprimer", required = true, example = "1")
+            @Parameter(example = "1")
             @PathVariable Long reservationId) {
+
         reservationService.deleteById(reservationId);
         return ResponseEntity.noContent().build();
     }
