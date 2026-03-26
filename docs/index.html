@@ -402,21 +402,217 @@
             overflow-x: auto;
             border-radius: 10px
         }
+
+        /* ── navbar ── */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(13, 15, 20, 0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: .75rem 2rem;
+            display: flex;
+            gap: .25rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .navbar a {
+            font-family: var(--mono);
+            font-size: .68rem;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            color: var(--muted);
+            text-decoration: none;
+            padding: .3rem .65rem;
+            border-radius: 6px;
+            transition: background .18s, color .18s;
+        }
+
+        .navbar a:hover {
+            background: rgba(91, 127, 255, .12);
+            color: var(--accent);
+        }
+
+        .navbar-brand {
+            font-family: var(--mono);
+            font-size: .72rem;
+            font-weight: 600;
+            color: var(--accent);
+            letter-spacing: .1em;
+            margin-right: auto;
+        }
+
+        /* ── endpoint examples ── */
+        .endpoint-block {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+
+        .endpoint-header {
+            display: flex;
+            align-items: center;
+            gap: .75rem;
+            padding: .85rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .method-badge {
+            font-family: var(--mono);
+            font-size: .68rem;
+            font-weight: 600;
+            letter-spacing: .06em;
+            padding: .25rem .6rem;
+            border-radius: 5px;
+            flex-shrink: 0;
+        }
+
+        .method-badge.post {
+            background: rgba(62, 207, 171, .15);
+            color: var(--accent2);
+            border: 1px solid rgba(62, 207, 171, .3);
+        }
+
+        .method-badge.get {
+            background: rgba(91, 127, 255, .15);
+            color: var(--accent);
+            border: 1px solid rgba(91, 127, 255, .3);
+        }
+
+        .endpoint-url {
+            font-family: var(--mono);
+            font-size: .8rem;
+            color: var(--text);
+        }
+
+        .endpoint-body {
+            padding: 1rem 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: .9rem;
+        }
+
+        .ep-subtitle {
+            font-family: var(--mono);
+            font-size: .65rem;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: .35rem;
+        }
+
+        .code-block {
+            background: #090b10;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: .9rem 1rem;
+            font-family: var(--mono);
+            font-size: .78rem;
+            color: var(--text);
+            overflow-x: auto;
+            white-space: pre;
+            line-height: 1.6;
+        }
+
+        .code-block .key { color: #8aaeff; }
+        .code-block .str { color: #3ecfab; }
+        .code-block .num { color: #f4b07a; }
+
+        .error-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: .75rem;
+        }
+
+        @media(max-width:640px) {
+            .error-row { grid-template-columns: 1fr; }
+        }
+
+        .error-tag {
+            font-family: var(--mono);
+            font-size: .65rem;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            padding: .2rem .5rem;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: .4rem;
+        }
+
+        .error-tag.conflict {
+            background: rgba(255, 92, 114, .12);
+            color: var(--red);
+            border: 1px solid rgba(255, 92, 114, .25);
+        }
+
+        .error-tag.validation {
+            background: rgba(240, 148, 77, .12);
+            color: var(--accent3);
+            border: 1px solid rgba(240, 148, 77, .25);
+        }
+
+        .error-tag.notfound {
+            background: rgba(250, 204, 21, .1);
+            color: #fde047;
+            border: 1px solid rgba(250, 204, 21, .25);
+        }
+
+        .response-tag {
+            font-family: var(--mono);
+            font-size: .65rem;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            padding: .2rem .5rem;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: .4rem;
+            background: rgba(62, 207, 171, .1);
+            color: var(--accent2);
+            border: 1px solid rgba(62, 207, 171, .25);
+        }
+
+        .contributors {
+            margin-top: 1rem;
+            font-family: var(--mono);
+            font-size: .75rem;
+            color: var(--muted);
+            letter-spacing: .04em;
+        }
+
+        .contributors span {
+            color: var(--accent2);
+        }
     </style>
 </head>
 
 <body>
 
-    <header>
+    <nav class="navbar">
+        <span class="navbar-brand">CampusRoom API</span>
+        <a href="#overview">Vue d'ensemble</a>
+        <a href="#architecture">Architecture</a>
+        <a href="#diagram">Diagramme</a>
+        <a href="#patterns">Design Patterns</a>
+        <a href="#data-model">Modèle</a>
+        <a href="#endpoints">Endpoints</a>
+        <a href="#coverage">Couverture</a>
+    </nav>
+
+    <header id="top">
         <div class="header-tag">Documentation Technique</div>
         <h1>CampusRoom API</h1>
         <p>Architecture &amp; Design Patterns</p>
+        <div class="contributors">Contributeurs : <span>AGANZE LWABOSHI MOISE</span> &nbsp;·&nbsp; <span>Gédeon MUTIKANGA</span> &nbsp;·&nbsp; <span>JONAS AMOZIGH</span></div>
     </header>
 
     <div class="container">
 
         <!-- ── Rôle ── -->
-        <div class="section">
+        <div class="section" id="overview">
             <span class="section-label">01 — Vue d'ensemble</span>
             <h2>Rôle de l'API</h2>
             <p>L'API <strong>CampusRoom</strong> est le cœur backend du système de gestion des campus, des salles et des
@@ -441,7 +637,7 @@
         </div>
 
         <!-- ── Architecture multicouche ── -->
-        <div class="section">
+        <div class="section" id="architecture">
             <span class="section-label">02 — Structure</span>
             <h2>Architecture Multicouche</h2>
             <p>L'application est structurée en couches bien séparées, chacune avec une responsabilité unique :</p>
@@ -492,7 +688,7 @@
         </div>
 
         <!-- ── Diagramme architecture complète ── -->
-        <div class="section">
+        <div class="section" id="diagram">
             <span class="section-label">03 — Diagramme</span>
             <h2>Architecture par couches — toutes les classes</h2>
             <div class="diagram-wrap">
@@ -790,7 +986,7 @@
         </div>
 
         <!-- ── Design Patterns ── -->
-        <div class="section">
+        <div class="section" id="patterns">
             <span class="section-label">04 — Design Patterns</span>
             <h2>Factory Pattern &amp; Strategy Pattern</h2>
             <p style="margin-bottom:1.5rem">Pour traiter la complexité des règles de création et de validation des
@@ -858,7 +1054,7 @@
         </div>
 
         <!-- ── Relations entre entités ── -->
-        <div class="section">
+        <div class="section" id="data-model">
             <span class="section-label">05 — Modèle de données</span>
             <h2>Relations entre entités</h2>
             <div class="diagram-wrap">
@@ -918,7 +1114,160 @@
             </div>
         </div>
 
-        <div class="section">
+        <!-- ── Exemple endpoints de test ── -->
+        <div class="section" id="endpoints">
+            <span class="section-label">06 — Endpoints</span>
+            <h2>Exemples d'endpoints de test</h2>
+            <p>Les endpoints ci-dessous sont testables via l'interface <strong>Swagger UI</strong> disponible dans le README.
+                Chaque bloc présente le body attendu, la réponse nominale et les erreurs possibles.</p>
+
+            <!-- ══ CAMPUS ══ -->
+            <div style="margin-top:2rem">
+                <span class="section-label" style="font-size:.75rem;color:var(--accent2)">Campus</span>
+
+                <!-- POST /campus -->
+                <div class="endpoint-block">
+                    <div class="endpoint-header">
+                        <span class="method-badge post">POST</span>
+                        <span class="endpoint-url">http://localhost:8095/campus</span>
+                    </div>
+                    <div class="endpoint-body">
+                        <div>
+                            <div class="ep-subtitle">Request body</div>
+                            <div class="code-block">{
+  <span class="key">"name"</span>: <span class="str">" ESGI - Campus Paris"</span>,
+  <span class="key">"city"</span>: <span class="str">"Paris"</span>
+}</div>
+                        </div>
+                        <div>
+                            <div class="ep-subtitle">Erreurs possibles</div>
+                            <div class="error-row">
+                                <div>
+                                    <span class="error-tag conflict">409 Conflict</span>
+                                    <div class="code-block">{
+  <span class="key">"status"</span>: <span class="num">409</span>,
+  <span class="key">"error"</span>: <span class="str">"Conflict"</span>,
+  <span class="key">"message"</span>: <span class="str">"Un campus existe déjà sous le nom :
+   ESGI - Campus Paris dans la ville de :
+   Paris ou dans une autre ville.
+   Le nom du campus doit être unique. "</span>,
+  <span class="key">"path"</span>: <span class="str">"/campus"</span>,
+  <span class="key">"validationErrors"</span>: <span class="str">null</span>
+}</div>
+                                </div>
+                                <div>
+                                    <span class="error-tag validation">400 Bad Request</span>
+                                    <div class="code-block">{
+  <span class="key">"status"</span>: <span class="num">400</span>,
+  <span class="key">"error"</span>: <span class="str">"Bad Request"</span>,
+  <span class="key">"message"</span>: <span class="str">"Erreur de validation
+   des champs"</span>,
+  <span class="key">"path"</span>: <span class="str">"/campus"</span>,
+  <span class="key">"validationErrors"</span>: {
+    <span class="key">"city"</span>: <span class="str">"Le nom de la ville
+     est obligatoire."</span>
+  }
+}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GET /campus?name=... -->
+                <div class="endpoint-block">
+                    <div class="endpoint-header">
+                        <span class="method-badge get">GET</span>
+                        <span class="endpoint-url">http://localhost:8095/campus?name= ESGI - Campus Paris</span>
+                    </div>
+                    <div class="endpoint-body">
+                        <div>
+                            <div class="ep-subtitle">Réponse nominale</div>
+                            <span class="response-tag">200 OK</span>
+                            <div class="code-block">{
+  <span class="key">"id"</span>: <span class="num">1</span>,
+  <span class="key">"name"</span>: <span class="str">" ESGI - Campus Paris"</span>,
+  <span class="key">"city"</span>: <span class="str">"Paris"</span>,
+  <span class="key">"roomDtoList"</span>: []
+}</div>
+                        </div>
+                        <div>
+                            <div class="ep-subtitle">Erreur possible</div>
+                            <span class="error-tag notfound">404 Not Found</span>
+                            <div class="code-block">{
+  <span class="key">"status"</span>: <span class="num">404</span>,
+  <span class="key">"error"</span>: <span class="str">"Not Found"</span>,
+  <span class="key">"message"</span>: <span class="str">"Aucun campus n'existe
+   pour ce nom."</span>,
+  <span class="key">"path"</span>: <span class="str">"/campus"</span>,
+  <span class="key">"validationErrors"</span>: <span class="str">null</span>
+}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══ ROOM ══ -->
+            <div style="margin-top:2rem">
+                <span class="section-label" style="font-size:.75rem;color:var(--accent4)">Room</span>
+
+                <!-- POST /room -->
+                <div class="endpoint-block">
+                    <div class="endpoint-header">
+                        <span class="method-badge post">POST</span>
+                        <span class="endpoint-url">http://localhost:8095/room</span>
+                    </div>
+                    <div class="endpoint-body">
+                        <div>
+                            <div class="ep-subtitle">Request body</div>
+                            <div class="code-block">{
+  <span class="key">"name"</span>: <span class="str">"Salle A102"</span>,
+  <span class="key">"capacity"</span>: <span class="num">35</span>,
+  <span class="key">"location"</span>: <span class="str">"Bâtiment A - 1er étage"</span>,
+  <span class="key">"campusId"</span>: <span class="num">1</span>,
+  <span class="key">"equipment"</span>: [<span class="str">"projecteur"</span>, <span class="str">"ecran"</span>]
+}</div>
+                        </div>
+                        <div>
+                            <div class="ep-subtitle">Erreurs possibles</div>
+                            <div class="error-row">
+                                <div>
+                                    <span class="error-tag conflict">409 Conflict</span>
+                                    <div class="code-block">{
+  <span class="key">"status"</span>: <span class="num">409</span>,
+  <span class="key">"error"</span>: <span class="str">"Conflict"</span>,
+  <span class="key">"message"</span>: <span class="str">"La salle : Salle A102
+   existe déjà sur le campus :
+    ESGI - Campus Paris et ne peut
+   plus être rajouté"</span>,
+  <span class="key">"path"</span>: <span class="str">"/room"</span>,
+  <span class="key">"validationErrors"</span>: <span class="str">null</span>
+}</div>
+                                </div>
+                                <div>
+                                    <span class="error-tag validation">400 Bad Request</span>
+                                    <div class="code-block">{
+  <span class="key">"status"</span>: <span class="num">400</span>,
+  <span class="key">"error"</span>: <span class="str">"Bad Request"</span>,
+  <span class="key">"message"</span>: <span class="str">"Erreur de validation
+   des champs"</span>,
+  <span class="key">"path"</span>: <span class="str">"/room"</span>,
+  <span class="key">"validationErrors"</span>: {
+    <span class="key">"location"</span>: <span class="str">"Emplacement
+     Obligatoire."</span>
+  }
+}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── Couverture Jacoco ── -->
+        <div class="section" id="coverage">
+            <span class="section-label">07 — Tests</span>
             <h2>Pourcentage Couverture des tests avec Jacoco :</h2>
             <img src="img.png" alt="Pourcentage Couverture des tests avec Jacoco" style="max-width: 100%; height: auto; border-radius: 8px;">
         </div>
