@@ -35,7 +35,7 @@ public class RoomController {
             description = """
                     Enregistre une nouvelle salle rattachée à un campus existant.
 
-                    **Champs obligatoires :** `name`, `capacity`, `location`, `campusName`
+                    **Champs obligatoires :** `name`, `capacity`, `location`, `campusId`
 
                     **Champs optionnels :** `equipment` (chaîne libre décrivant les équipements disponibles : projecteur, PC, tableau blanc…)
                     """
@@ -58,7 +58,7 @@ public class RoomController {
                                             "name":       "Le nom de la salle est obligatoire",
                                             "capacity":   "La capacité est obligatoire",
                                             "location":   "L'emplacement est obligatoire",
-                                            "campusName": "Le nom du campus est obligatoire"
+                                            "campusId": "L'Id du campus est obligatoire"
                                         },
                                         "timestamp": "2026-03-16T10:00:00"
                                     }
@@ -73,7 +73,7 @@ public class RoomController {
                             examples = @ExampleObject(value = """
                                     {
                                         "status":  404,
-                                        "message": "Aucun campus trouvé pour le nom : Campus Inconnu"
+                                        "message": "Aucun campus trouvé pour cet Id: Campus Inconnu"
                                     }
                                     """)
                     )
@@ -105,7 +105,7 @@ public class RoomController {
                                                 "name":       "Salle A101",
                                                 "capacity":   30,
                                                 "location":   "Bâtiment A — 1er étage",
-                                                "campusName": "Campus Central",
+                                                "campusId": 1,
                                                 "equipment":  "Projecteur, PC, Tableau blanc"
                                             }
                                             """
@@ -117,7 +117,7 @@ public class RoomController {
                                                 "name":       "Salle B202",
                                                 "capacity":   20,
                                                 "location":   "Bâtiment B — 2ème étage",
-                                                "campusName": "Campus Sud",
+                                                "campusId": 1,
                                                 "equipment":  ""
                                             }
                                             """
@@ -158,7 +158,7 @@ public class RoomController {
                                         "name":       "Salle A101",
                                         "capacity":   30,
                                         "location":   "Bâtiment A — 1er étage",
-                                        "campusName": "Campus Central",
+                                        "campusId": 1,
                                         "equipment":  "Projecteur, PC, Tableau blanc"
                                     }
                                     """)
@@ -357,7 +357,7 @@ public class RoomController {
                                                 "name":       "Salle A101",
                                                 "capacity":   30,
                                                 "location":   "Bâtiment A — 1er étage",
-                                                "campusName": "Campus Central",
+                                                "campus": "Campus Central",
                                                 "equipment":  "Projecteu"
                                             },
                                             {
@@ -365,7 +365,7 @@ public class RoomController {
                                                 "name":       "Salle A102",
                                                 "capacity":   25,
                                                 "location":   "Bâtiment A — 1er étage",
-                                                "campusName": "Campus Central",
+                                                "campus": "Campus Central",
                                                 "equipment":  "Tableau blanc"
                                             }
                                         ],

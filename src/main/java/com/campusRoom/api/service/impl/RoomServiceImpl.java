@@ -69,6 +69,7 @@ public class RoomServiceImpl implements RoomService {
                 .capacity(roomFormDto.capacity())
                 .location(roomFormDto.location())
                 .campus(campus)
+                .equipment(roomFormDto.equipment())
                 .build();
         campus.getRooms().add(room);
         roomRepository.save(room);

@@ -4,6 +4,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
+import java.util.List;
+
 @Builder
 public record RoomFormDto(
 
@@ -17,6 +19,8 @@ public record RoomFormDto(
         String location ,
 
         @NotNull(message = " Obligation d'avoir un campus associé pour une salle.")
-        Long campusId
+        Long campusId ,
+
+        List<String> equipment
 ) {
 }
