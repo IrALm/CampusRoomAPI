@@ -43,7 +43,11 @@ Le projet intègre des tests unitaires et une vérification de la couverture de 
 
 ```bash
 # Lancer les tests manuellement
-mvn test
+mvn clean test
+```
+```bash
+# Lancer Jacoco pour voir la couverture des tests
+mvn jacoco:report
 ```
 
 ## 🏗️ Architecture Backend
