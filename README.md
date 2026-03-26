@@ -37,7 +37,7 @@ mvn spring-boot:run
 | **Swagger UI**       | [Accéder à Swagger](http://localhost:8095/swagger-ui/index.html) | Documentation interactive de l'API                                                                      |
 | **H2 Database**      | `http://localhost:8095/h2-console`                               | **JDBC URL:** `jdbc:h2:mem:campusdb`<br>**User:** `sa`<br>**Password:** (vide)                          |
 
-## 🧪 Tests et Intégration Continue (CI/CD)
+## 🧪 Tests
 
 Le projet intègre des tests unitaires et une vérification de la couverture de code via **JaCoCo**.
 
